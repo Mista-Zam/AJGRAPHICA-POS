@@ -82,4 +82,58 @@ app.get("/finances", async (c) => {
   return c.json(data)
 })
 
+// --- Admin endpoints (superadmin only) ---
+
+app.get("/admin/profiles", async (c) => {
+  const ctx = c.get("supabaseContext")
+  const { data: profile } = await ctx.supabase
+    .from("profiles")
+    .select("role")
+    .eq("user_id", ctx.userClaims?.id)
+    .maybeSingle()
+  if (profile?.role !== "superadmin") return c.json({ error: "Forbidden" }, 403)
+  const { data } = await ctx.supabaseAdmin
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: false })
+  return c.json(data ?? [])
+})
+
+app.post("/admin/create-user", async (c) => {
+  const ctx = c.get("supabaseContext")
+  const { data: profile } = await ctx.supabase
+    .from("profiles")
+    .select("role")
+    .eq("user_id", ctx.userClaims?.id)
+    .maybeSingle()
+  if (profile?.role !== "superadmin") return c.json({ error: "Forbidden" }, 403)
+
+  const { email, password, name, role: userRole } = await c.req.json()
+  const { data: newUser, error } = await ctx.supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { name, role: userRole ?? "admin" },
+  })
+  if (error) return c.json({ error: error.message }, 400)
+  return c.json({ id: newUser.user.id, email: newUser.user.email }, 201)
+})
+
+app.post("/admin/change-password", async (c) => {
+  const ctx = c.get("supabaseContext")
+  const { data: profile } = await ctx.supabase
+    .from("profiles")
+    .select("role")
+    .eq("user_id", ctx.userClaims?.id)
+    .maybeSingle()
+  if (profile?.role !== "superadmin") return c.json({ error: "Forbidden" }, 403)
+
+  const { userId, newPassword } = await c.req.json()
+  const { error } = await ctx.supabaseAdmin.auth.admin.updateUserById(userId, {
+    password: newPassword,
+  })
+  if (error) return c.json({ error: error.message }, 400)
+  return c.json({ success: true })
+})
+
 Deno.serve(app.fetch)

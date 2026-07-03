@@ -1,33 +1,39 @@
 ﻿import { useState } from "react";
-import { Eye, EyeOff, AlertCircle, Shield, User, Lock } from "lucide-react";
+import { Eye, EyeOff, AlertCircle, Shield, User, Lock, Mail } from "lucide-react";
+import { login } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 interface LoginPageProps {
   onLogin: (role: "admin" | "superadmin") => void;
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState<"admin" | "superadmin">("admin");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!username.trim()) { setError("Please enter your username."); return; }
+    if (!email.trim()) { setError("Please enter your email."); return; }
     if (!password) { setError("Please enter your password."); return; }
 
     setLoading(true);
-    setTimeout(() => {
+    try {
+      await login(email.trim(), password);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+        .maybeSingle();
+      onLogin((profile?.role as "admin" | "superadmin") ?? "admin");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Invalid email or password");
+    } finally {
       setLoading(false);
-      if (username.trim() && password) {
-        onLogin(role);
-      } else {
-        setError("Please enter your username and password.");
-      }
-    }, 600);
+    }
   };
 
   return (
@@ -97,34 +103,6 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <p className="text-sm text-gray-500 mt-1.5">Sign in to your shop dashboard</p>
           </div>
 
-          {/* Role selector */}
-          <div className="grid grid-cols-2 gap-2.5 mb-6">
-            <button
-              type="button"
-              onClick={() => { setRole("admin"); setError(""); }}
-              className={`flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border-2 text-sm font-semibold transition-all duration-200 ${
-                role === "admin"
-                  ? "bg-[#C53030] text-white border-[#C53030] shadow-md shadow-[#C53030]/20 scale-105"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#C53030]/40 hover:text-[#C53030]"
-              }`}
-            >
-              <User size={16} />
-              Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => { setRole("superadmin"); setError(""); }}
-              className={`flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border-2 text-sm font-semibold transition-all duration-200 ${
-                role === "superadmin"
-                  ? "bg-white text-[#C53030] border-[#C53030] shadow-md shadow-[#C53030]/20 scale-105"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#C53030]/40 hover:text-[#C53030]"
-              }`}
-            >
-              <Shield size={16} />
-              Superadmin
-            </button>
-          </div>
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {error && (
               <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#991B1B] text-sm px-4 py-3 rounded-xl animate-slide-in-up">
@@ -134,14 +112,15 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Username</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Email</label>
               <div className="relative">
-                <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                 <input
+                  type="email"
                   autoFocus
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
                   className="w-full border border-gray-200 rounded-xl pl-10 pr-3.5 py-3 text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/15 bg-white text-gray-900 transition-all duration-200 placeholder:text-gray-400"
                 />
               </div>
@@ -166,7 +145,6 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-
             </div>
 
             <button

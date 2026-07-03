@@ -12,6 +12,7 @@ import { SettingsPage } from "./components/settings-page";
 import { FinancesPage } from "./components/finances-page";
 import { type Jobbing, type JobStage, type JobStatus } from "./data/mock-data";
 import { getAllJobbings, addJobbing, updateJobbing, saveFinanceRecord, getAllFinances, getSettings, deleteJobbing, deleteFinanceRecord, type FinanceRecord, type ShopSettings } from "@/lib/supabase-service";
+import { restoreSession, logout as authLogout } from "@/lib/auth";
 
 /* MARKER-MAKE-KIT-INVOKED */
 
@@ -19,8 +20,9 @@ type Page = "dashboard" | "jobbings" | "history" | "settings" | "finances";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
-  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem("auth_loggedIn") === "true");
-  const [role, setRole] = useState<"admin" | "superadmin">(() => (localStorage.getItem("auth_role") as "admin" | "superadmin") || "admin");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
+  const [role, setRole] = useState<"admin" | "superadmin">("admin");
   const [page, setPage] = useState<Page>("dashboard");
   const [jobbings, setJobbings] = useState<Jobbing[]>([]);
   const [showNewJobbing, setShowNewJobbing] = useState(false);
@@ -32,6 +34,15 @@ export default function App() {
   const [editJobbingId, setEditJobbingId] = useState<string | null>(null);
   const [receiptJobbingId, setReceiptJobbingId] = useState<string | null>(null);
   const [shopSettings, setShopSettings] = useState<ShopSettings | null>(null);
+
+  useEffect(() => {
+    restoreSession().then((result) => {
+      if (result) {
+        setRole((result.profile.role as "admin" | "superadmin") ?? "admin");
+        setLoggedIn(true);
+      }
+    }).finally(() => setSessionLoaded(true));
+  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -214,8 +225,15 @@ export default function App() {
     setSidebarOpen(false);
   };
 
-  if (!loggedIn) {
-    return <LoginPage onLogin={(r) => { setRole(r); setLoggedIn(true); localStorage.setItem("auth_role", r); localStorage.setItem("auth_loggedIn", "true"); }} />;
+  if (!sessionLoaded || !loggedIn) {
+    if (!sessionLoaded) {
+      return (
+        <div className="flex h-dvh items-center justify-center bg-background">
+          <div className="text-muted-foreground text-sm font-medium">Loading...</div>
+        </div>
+      );
+    }
+    return <LoginPage onLogin={(r) => { setRole(r); setLoggedIn(true); }} />;
   }
 
   return (
@@ -244,7 +262,7 @@ export default function App() {
           onNavigate={handleNavigate}
           jobbings={jobbings}
           onNewJobbing={() => { setShowNewJobbing(true); setSidebarOpen(false); }}
-          onLogout={() => { setLoggedIn(false); localStorage.removeItem("auth_loggedIn"); localStorage.removeItem("auth_role"); }}
+          onLogout={() => { authLogout().catch(console.error); setLoggedIn(false); }}
           shopName={shopSettings?.shopName || "Shop"}
         />
       </div>
@@ -329,7 +347,7 @@ export default function App() {
               onPrintReceipt={() => setReceiptJobbingId(selectedJob.id)}
             />
           )}
-          {page === "settings" && <SettingsPage />}
+          {page === "settings" && <SettingsPage role={role} />}
         </main>
 
         {/* Mobile bottom tab bar */}
