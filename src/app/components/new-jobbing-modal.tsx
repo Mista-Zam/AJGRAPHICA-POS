@@ -19,18 +19,21 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
     jobType: "T-Shirt" as JobType,
     fabric: undefined as Fabric | undefined,
     description: "",
-    quantity: 1,
-    rate: 0,
+    quantity: "1",
+    rate: "",
     pickupDate: today,
-    downPayment: 0,
+    downPayment: "",
     isUrgent: false,
     attachment: undefined as string | undefined,
   });
 
   const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
-  const amount = form.quantity * form.rate;
-  const balance = amount - form.downPayment;
+  const qty = parseInt(form.quantity) || 0;
+  const rate = parseFloat(form.rate) || 0;
+  const down = parseFloat(form.downPayment) || 0;
+  const amount = qty * rate;
+  const balance = amount - down;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,7 +45,21 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...form, amount, status: form.isUrgent ? "Urgent" : "Normal" });
+    onSave({
+      customerName: form.customerName,
+      contactNumber: form.contactNumber,
+      address: form.address,
+      jobType: form.jobType,
+      fabric: form.fabric,
+      description: form.description,
+      quantity: qty,
+      pickupDate: form.pickupDate,
+      amount,
+      downPayment: down,
+      isUrgent: form.isUrgent,
+      attachment: form.attachment,
+      status: form.isUrgent ? "Urgent" : "Normal",
+    });
   };
 
   return (
@@ -159,12 +176,12 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
                 <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Quantity</label>
-                <input type="text" inputMode="numeric" value={form.quantity || ""} onChange={(e) => set("quantity", parseInt(e.target.value.replace(/\D/g, "")) || 1)}
+                <input type="text" inputMode="numeric" value={form.quantity} onChange={(e) => set("quantity", e.target.value.replace(/\D/g, ""))}
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
               <div>
                 <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Rate (₱)</label>
-                <input type="text" inputMode="decimal" value={form.rate || ""} onChange={(e) => set("rate", parseFloat(e.target.value.replace(/[^0-9.]/g, "")) || 0)}
+                <input type="text" inputMode="decimal" value={form.rate} onChange={(e) => set("rate", e.target.value.replace(/[^0-9.]/g, ""))}
                   placeholder="0.00"
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
@@ -179,7 +196,7 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
               </div>
               <div>
                 <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Down Payment (₱)</label>
-                <input type="text" inputMode="decimal" value={form.downPayment || ""} onChange={(e) => set("downPayment", parseFloat(e.target.value.replace(/[^0-9.]/g, "")) || 0)}
+                <input type="text" inputMode="decimal" value={form.downPayment} onChange={(e) => set("downPayment", e.target.value.replace(/[^0-9.]/g, ""))}
                   placeholder="0.00"
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
