@@ -19,7 +19,7 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
     jobType: "T-Shirt" as JobType,
     fabric: undefined as Fabric | undefined,
     description: "",
-    quantity: "1",
+    quantity: "",
     rate: "",
     pickupDate: today,
     downPayment: "",
@@ -45,6 +45,7 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.quantity) return;
     onSave({
       customerName: form.customerName,
       contactNumber: form.contactNumber,
