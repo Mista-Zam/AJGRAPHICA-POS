@@ -20,14 +20,17 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
     fabric: undefined as Fabric | undefined,
     description: "",
     quantity: 1,
+    rate: 0,
     pickupDate: today,
-    amount: 0,
     downPayment: 0,
     isUrgent: false,
     attachment: undefined as string | undefined,
   });
 
   const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
+
+  const amount = form.quantity * form.rate;
+  const balance = amount - form.downPayment;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,10 +42,8 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...form, status: form.isUrgent ? "Urgent" : "Normal" });
+    onSave({ ...form, amount, status: form.isUrgent ? "Urgent" : "Normal" });
   };
-
-  const balance = form.amount - form.downPayment;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -154,41 +155,47 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
               )}
             </div>
 
-            {/* Quantity + Pickup Date */}
+            {/* Quantity + Rate */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
                 <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Quantity</label>
-                <input type="number" min={1} value={form.quantity} onChange={(e) => set("quantity", parseInt(e.target.value) || 1)}
+                <input type="text" inputMode="numeric" value={form.quantity || ""} onChange={(e) => set("quantity", parseInt(e.target.value.replace(/\D/g, "")) || 1)}
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
+              <div>
+                <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Rate (₱)</label>
+                <input type="text" inputMode="decimal" value={form.rate || ""} onChange={(e) => set("rate", parseFloat(e.target.value.replace(/[^0-9.]/g, "")) || 0)}
+                  placeholder="0.00"
+                  className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
+              </div>
+            </div>
+
+            {/* Pickup Date + Down Payment */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
                 <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Pickup Date *</label>
                 <input type="date" required value={form.pickupDate} onChange={(e) => set("pickupDate", e.target.value)}
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
-            </div>
-
-            {/* Amount & Down Payment */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
-                <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Amount (â‚±) *</label>
-                <input type="text" inputMode="decimal" required value={form.amount || ""} onChange={(e) => set("amount", parseFloat(e.target.value) || 0)}
-                  placeholder="0.00"
-                  className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
-              </div>
-              <div>
-                <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Down Payment (â‚±)</label>
-                <input type="text" inputMode="decimal" value={form.downPayment || ""} onChange={(e) => set("downPayment", parseFloat(e.target.value) || 0)}
+                <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Down Payment (₱)</label>
+                <input type="text" inputMode="decimal" value={form.downPayment || ""} onChange={(e) => set("downPayment", parseFloat(e.target.value.replace(/[^0-9.]/g, "")) || 0)}
                   placeholder="0.00"
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
             </div>
 
-            {/* Balance preview */}
-            {form.amount > 0 && (
-              <div className={`text-xs sm:text-sm rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 flex items-center justify-between ${balance > 0 ? "bg-[#FEF2F2] dark:bg-[#3a1010] text-[#991B1B] dark:text-[#e87070]" : "bg-[#E8F5F1] dark:bg-[#064E3B] text-[#0F6E56] dark:text-[#5abb9e]"}`}>
-                <span className="text-[10px] sm:text-xs font-medium">{balance > 0 ? "Remaining Balance" : "Fully Paid"}</span>
-                <span className="font-semibold text-xs sm:text-sm">â‚±{Math.max(0, balance).toLocaleString("en-PH")}</span>
+            {/* Total & Balance */}
+            {amount > 0 && (
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 bg-gray-50 dark:bg-[#2a2a2a] rounded-xl">
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">Total Amount</span>
+                  <span className="font-bold text-gray-900 dark:text-gray-100">₱{amount.toLocaleString("en-PH")}</span>
+                </div>
+                <div className={`flex items-center justify-between text-xs sm:text-sm px-2.5 sm:px-3 py-2 rounded-xl ${balance > 0 ? "bg-[#FEF2F2] dark:bg-[#3a1010] text-[#991B1B] dark:text-[#e87070]" : "bg-[#E8F5F1] dark:bg-[#064E3B] text-[#0F6E56] dark:text-[#5abb9e]"}`}>
+                  <span className="font-medium">{balance > 0 ? "Remaining Balance" : "Fully Paid"}</span>
+                  <span className="font-bold">₱{Math.max(0, balance).toLocaleString("en-PH")}</span>
+                </div>
               </div>
             )}
           </div>
