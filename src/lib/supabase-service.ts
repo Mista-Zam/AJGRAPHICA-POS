@@ -28,6 +28,7 @@ export type Fabric = "Cotton" | "Sublimation";
 export type JobStatus = "Urgent" | "In Progress" | "For Pickup" | "Done" | "Normal";
 export type PaymentStatus = "Unpaid" | "Partial" | "Paid";
 export type JobStage = "Received" | "In Progress" | "For Pickup" | "Completed";
+export type POStatus = "none" | "pending_payment" | "partially_paid" | "paid" | "cancelled";
 
 export interface Jobbing {
   id: string;
@@ -48,6 +49,11 @@ export interface Jobbing {
   createdAt: string;
   isUrgent: boolean;
   attachment?: string;
+  isPurchaseOrder: boolean;
+  poStatus: POStatus;
+  paymentCompletedAt?: string;
+  dueDate?: string;
+  poNotes?: string;
 }
 
 interface JobbingRow {
@@ -68,6 +74,11 @@ interface JobbingRow {
   notes: string;
   is_urgent: boolean;
   attachment: string | null;
+  is_purchase_order: boolean;
+  po_status: string;
+  payment_completed_at: string | null;
+  due_date: string | null;
+  po_notes: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -107,6 +118,11 @@ function rowToJobbing(row: JobbingRow): Jobbing {
     createdAt: row.created_at,
     isUrgent: row.is_urgent,
     attachment: row.attachment ?? undefined,
+    isPurchaseOrder: row.is_purchase_order,
+    poStatus: row.po_status as POStatus,
+    paymentCompletedAt: row.payment_completed_at ?? undefined,
+    dueDate: row.due_date ?? undefined,
+    poNotes: row.po_notes ?? undefined,
   };
 }
 
@@ -129,6 +145,11 @@ function jobbingToRow(jobbing: Partial<Jobbing>): Record<string, unknown> {
     notes: jobbing.notes ?? "",
     is_urgent: jobbing.isUrgent ?? false,
     attachment: jobbing.attachment ?? null,
+    is_purchase_order: jobbing.isPurchaseOrder ?? false,
+    po_status: jobbing.poStatus ?? "none",
+    payment_completed_at: jobbing.paymentCompletedAt ?? null,
+    due_date: jobbing.dueDate ?? null,
+    po_notes: jobbing.poNotes ?? null,
   };
 }
 
@@ -181,6 +202,7 @@ export async function updateJobbing(jobbing: Jobbing): Promise<void> {
 }
 
 export async function deleteJobbing(id: string): Promise<void> {
+  await supabase.from("payments").delete().eq("jobbing_id", id);
   await supabase.from("finance_records").delete().eq("jobbing_id", id);
   const { error } = await supabase.from("jobbings").delete().eq("id", id);
   if (error) throw error;
@@ -217,6 +239,97 @@ export async function deleteFinanceRecord(id: string): Promise<void> {
   if (error) throw error;
 }
 
+// --- Purchase Order queries ---
+
+export async function getPurchaseOrders(): Promise<Jobbing[]> {
+  const { data, error } = await supabase
+    .from("jobbings")
+    .select("*")
+    .eq("is_purchase_order", true)
+    .in("po_status", ["pending_payment", "partially_paid"])
+    .order("pickup_date", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((row: unknown) => rowToJobbing(row as JobbingRow));
+}
+
+export async function getPaymentHistory(jobbingId: string): Promise<PaymentRecord[]> {
+  const { data, error } = await supabase
+    .from("payments")
+    .select("*")
+    .eq("jobbing_id", jobbingId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as PaymentRecord[];
+}
+
+export interface PaymentRecord {
+  id: string;
+  jobbing_id: string;
+  amount: number;
+  payment_method: string | null;
+  payment_date: string;
+  notes: string | null;
+  reference_number: string | null;
+  received_by: string | null;
+  created_at: string;
+}
+
+export async function savePayment(payment: {
+  jobbing_id: string;
+  amount: number;
+  payment_method: string;
+  payment_date: string;
+  notes: string;
+  reference_number?: string;
+  received_by?: string;
+}): Promise<void> {
+  const { error } = await supabase.from("payments").insert({
+    jobbing_id: payment.jobbing_id,
+    amount: payment.amount,
+    payment_method: payment.payment_method,
+    payment_date: payment.payment_date,
+    notes: payment.notes || null,
+    reference_number: payment.reference_number || null,
+    received_by: payment.received_by || null,
+  });
+  if (error) throw error;
+}
+
+// --- Finance dashboard KPI ---
+
+export interface FinanceSummary {
+  totalRevenue: number;
+  totalCollected: number;
+  outstandingBalance: number;
+  poCount: number;
+  overdueCount: number;
+}
+
+export async function getFinanceSummary(): Promise<FinanceSummary> {
+  const { data: finances } = await supabase
+    .from("finance_records")
+    .select("amount");
+
+  const { data: pos } = await supabase
+    .from("jobbings")
+    .select("amount, down_payment, pickup_date")
+    .eq("is_purchase_order", true)
+    .in("po_status", ["pending_payment", "partially_paid"]);
+
+  const totalRevenue = (finances ?? []).reduce((s: number, r: any) => s + Number(r.amount), 0);
+  const outstandingBalance = (pos ?? []).reduce((s: number, r: any) => s + (Number(r.amount) - Number(r.down_payment)), 0);
+  const today = new Date().toISOString().split("T")[0];
+  const overdueCount = (pos ?? []).filter((r: any) => r.pickup_date < today).length;
+
+  return {
+    totalRevenue,
+    totalCollected: totalRevenue,
+    outstandingBalance,
+    poCount: (pos ?? []).length,
+    overdueCount,
+  };
+}
+
 const DEFAULT_SETTINGS: ShopSettings = {
   shopName: "AJ Graphica",
   address: "Malita, Davao Occidental",
@@ -247,6 +360,7 @@ export async function saveSettings(settings: ShopSettings): Promise<void> {
 }
 
 export async function clearAllData(): Promise<void> {
+  await supabase.from("payments").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   await supabase.from("jobbings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   await supabase.from("finance_records").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   await supabase.from("settings").delete().eq("key", "shop");

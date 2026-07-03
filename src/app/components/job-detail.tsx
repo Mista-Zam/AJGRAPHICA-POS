@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { ArrowLeft, AlertTriangle, CheckCircle, Edit3, Printer, Save } from "lucide-react";
+import { ArrowLeft, AlertTriangle, CheckCircle, Edit3, Printer, Save, CreditCard } from "lucide-react";
 import type { Jobbing, JobStage, PaymentStatus } from "../data/mock-data";
 import { formatPeso, formatDateLong, getPickupColor, PAYMENT_COLORS } from "../data/utils";
 
@@ -58,9 +58,15 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
         <div className={`card-shadow rounded-xl border p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 ${isUrgentActive ? "bg-[#FEF2F2] dark:bg-[#3a1010] border-[#FECACA] dark:border-[#6a2020]" : "bg-white dark:bg-[#1a1a1a] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]"}`}>
           <div className="flex items-start justify-between gap-2 sm:gap-3">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
                 {isUrgentActive && <AlertTriangle size={16} className="text-[#991B1B] shrink-0" />}
                 <span className="text-[10px] sm:text-xs font-mono text-gray-400">{jobbing.id}</span>
+                {jobbing.isPurchaseOrder && (
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-700/30">
+                    <CreditCard size={10} />
+                    Purchase Order
+                  </span>
+                )}
               </div>
               <h2 className={`truncate text-lg sm:text-xl ${isUrgentActive ? "text-[#991B1B] dark:text-[#e87070]" : "text-gray-900 dark:text-gray-100"}`}>{jobbing.customerName}</h2>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5">{jobbing.contactNumber}</p>
@@ -109,6 +115,18 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
                 <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">Pickup Date</span>
                 <p className={`text-xs sm:text-sm mt-0.5 ${getPickupColorDetail(jobbing.pickupDate)}`}>{formatDateLong(jobbing.pickupDate)}</p>
               </div>
+              {jobbing.isPurchaseOrder && (
+                <>
+                  <Row label="PO Status" value={jobbing.poStatus === "paid" ? "Paid" : jobbing.poStatus === "partially_paid" ? "Partially Paid" : jobbing.poStatus === "pending_payment" ? "Pending Payment" : jobbing.poStatus || "None"} />
+                  {jobbing.dueDate && <Row label="Due Date" value={formatDateLong(jobbing.dueDate)} />}
+                  {jobbing.poNotes && (
+                    <div>
+                      <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">PO Notes</span>
+                      <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 mt-0.5">{jobbing.poNotes}</p>
+                    </div>
+                  )}
+                </>
+              )}
               {jobbing.attachment && (
                 <div>
                   <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">Attachment</span>

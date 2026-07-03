@@ -10,10 +10,11 @@
   Sun,
   Calendar,
   Users,
+  CreditCard,
 } from "lucide-react";
 import type { Jobbing } from "../data/mock-data";
 
-type Page = "dashboard" | "jobbings" | "history" | "settings" | "finances" | "users";
+type Page = "dashboard" | "jobbings" | "history" | "settings" | "finances" | "users" | "purchases";
 
 interface SidebarProps {
   activePage: Page;
@@ -30,6 +31,7 @@ interface SidebarProps {
 const baseNavItems: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
   { id: "jobbings", label: "Jobbings", icon: <ClipboardList size={20} /> },
+  { id: "purchases", label: "Purchase Orders", icon: <CreditCard size={20} /> },
   { id: "history", label: "History", icon: <History size={20} /> },
   { id: "finances", label: "Finances", icon: <TrendingUp size={20} /> },
   { id: "users", label: "Users", icon: <Users size={20} /> },

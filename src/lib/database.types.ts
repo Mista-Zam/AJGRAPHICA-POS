@@ -114,6 +114,11 @@ export interface JobbingRow {
   notes: string;
   is_urgent: boolean;
   attachment: string | null;
+  is_purchase_order: boolean;
+  po_status: string;
+  payment_completed_at: string | null;
+  due_date: string | null;
+  po_notes: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -136,6 +141,8 @@ export interface Payment {
   payment_method: string | null;
   payment_date: string;
   notes: string | null;
+  reference_number: string | null;
+  received_by: string | null;
   created_at: string;
 }
 

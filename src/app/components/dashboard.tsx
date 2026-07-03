@@ -1,6 +1,6 @@
 ﻿import { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { AlertCircle, ClipboardList, Clock, PhilippinePeso, Bell } from "lucide-react";
+import { AlertCircle, ClipboardList, Clock, PhilippinePeso, Bell, CreditCard, AlertTriangle } from "lucide-react";
 import type { Jobbing } from "../data/mock-data";
 import type { FinanceRecord } from "@/lib/supabase-service";
 import { formatPeso, formatDate, getPickupColor, STATUS_COLORS } from "../data/utils";
@@ -39,6 +39,10 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
     return d.getTime() < today.getTime() && j.status !== "Done";
   });
 
+  const poJobbings = jobbings.filter((j) => j.isPurchaseOrder && (j.poStatus === "pending_payment" || j.poStatus === "partially_paid"));
+  const poOverdue = poJobbings.filter((j) => (j.dueDate || j.pickupDate) < today.toISOString().split("T")[0]);
+  const allAlerts = [...dueToday, ...overdue, ...poOverdue];
+
   const recent = [...jobbings]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
@@ -58,6 +62,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
     { label: "Urgent", value: urgent.length, icon: <AlertCircle size={22} />, color: "text-[#991B1B]", bg: "bg-[#FEF2F2]" },
     { label: "Due Today", value: dueToday.length, icon: <Clock size={22} />, color: "text-amber-600", bg: "bg-amber-50" },
     { label: "Collected Today", value: formatPeso(earnedToday), icon: <PhilippinePeso size={22} />, color: "text-[#0F6E56]", bg: "bg-[#E8F5F1]" },
+    { label: "Purchase Orders", value: poJobbings.length, icon: <CreditCard size={22} />, color: "text-[#C53030]", bg: "bg-[#FEF2F2]" },
   ];
 
   return (
@@ -71,7 +76,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
               {new Date().toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
             </p>
           </div>
-          {(dueToday.length > 0 || overdue.length > 0) && (
+          {(dueToday.length > 0 || overdue.length > 0 || poOverdue.length > 0) && (
             <div className="relative shrink-0">
               <button
                 onClick={() => setShowNotif((v) => !v)}
@@ -79,7 +84,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
               >
                 <Bell size={20} />
                 <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#991B1B] text-white text-[9px] font-bold leading-none">
-                  {dueToday.length + overdue.length}
+                  {allAlerts.length}
                 </span>
               </button>
               {showNotif && (
@@ -87,25 +92,32 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotif(false)} />
                   <div className="absolute right-0 top-full mt-2 z-50 w-72 bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl shadow-xl overflow-hidden card-shadow">
                     <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)]">
-                      Pickup Alerts
+                      Pickup & PO Alerts
                     </div>
                     <div className="max-h-60 overflow-y-auto scrollbar-thin">
-                      {[...dueToday, ...overdue].map((j) => (
-                        <button
-                          key={j.id}
-                          onClick={() => { onViewJobbing(j.id); setShowNotif(false); }}
-                          className="w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors border-b border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.04)] last:border-0"
-                        >
-                          <span className={`w-2 h-2 rounded-full shrink-0 ${new Date(j.pickupDate) < today ? "bg-[#991B1B]" : "bg-amber-500"}`} />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{j.customerName}</div>
-                            <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate">{j.jobType} Â· {j.id}</div>
-                          </div>
-                          <span className={`text-[10px] font-semibold shrink-0 ${new Date(j.pickupDate) < today ? "text-[#991B1B]" : "text-amber-600"}`}>
-                            {new Date(j.pickupDate) < today ? "Overdue" : "Today"}
-                          </span>
-                        </button>
-                      ))}
+                      {allAlerts.map((j) => {
+                        const isPO = j.isPurchaseOrder;
+                        const overdueDate = new Date(j.pickupDate) < today || (j.dueDate && new Date(j.dueDate) < today);
+                        return (
+                          <button
+                            key={j.id}
+                            onClick={() => { onViewJobbing(j.id); setShowNotif(false); }}
+                            className="w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors border-b border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.04)] last:border-0"
+                          >
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${overdueDate ? "bg-[#991B1B]" : "bg-amber-500"}`} />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{j.customerName}</div>
+                              <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                                {j.jobType} · {j.id}
+                                {isPO && <span className="ml-1 text-amber-600 font-semibold">[PO]</span>}
+                              </div>
+                            </div>
+                            <span className={`text-[10px] font-semibold shrink-0 ${overdueDate ? "text-[#991B1B]" : "text-amber-600"}`}>
+                              {overdueDate ? "Overdue" : "Today"}
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </>
@@ -115,7 +127,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
         </div>
 
         {/* Summary Cards â€” 2-col on mobile, 3-col on sm, 4-col on md+ */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 mb-4 sm:mb-5">
           {cards.map((c) => (
             <div key={c.label} className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-2.5 sm:p-4 card-shadow relative overflow-hidden">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C53030] rounded-l-xl" />

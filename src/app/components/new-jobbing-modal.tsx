@@ -1,10 +1,10 @@
 ﻿import { useState } from "react";
-import { X, AlertTriangle, Paperclip } from "lucide-react";
+import { X, AlertTriangle, Paperclip, CreditCard, Building2 } from "lucide-react";
 import type { Jobbing, JobType, Fabric } from "../data/mock-data";
 
 interface NewJobbingModalProps {
   onClose: () => void;
-  onSave: (jobbing: Omit<Jobbing, "id" | "createdAt" | "stage" | "paymentStatus" | "notes">) => void;
+  onSave: (jobbing: Omit<Jobbing, "id" | "createdAt" | "stage" | "paymentStatus" | "notes" | "poStatus" | "paymentCompletedAt">) => void;
 }
 
 const JOB_TYPES: JobType[] = ["T-Shirt", "Polo Shirt", "Tarpaulin", "Uniform", "Alteration", "Jacket", "Other"];
@@ -24,6 +24,8 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
     pickupDate: today,
     downPayment: "",
     isUrgent: false,
+    isPurchaseOrder: false,
+    dueDate: "",
     attachment: undefined as string | undefined,
   });
 
@@ -60,17 +62,17 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
       isUrgent: form.isUrgent,
       attachment: form.attachment,
       status: form.isUrgent ? "Urgent" : "Normal",
+      isPurchaseOrder: form.isPurchaseOrder,
+      dueDate: form.dueDate || undefined,
+      poNotes: form.isPurchaseOrder ? "Pay later" : "",
     });
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Panel */}
-      <div className="relative w-full max-w-[min(560px,95vw)] max-h-[90vh] bg-white dark:bg-[#1a1a1a] overflow-y-auto flex flex-col rounded-2xl border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] shadow-2xl">
-        {/* Header */}
+      <div className="relative w-full max-w-[min(640px,95vw)] max-h-[90vh] bg-white dark:bg-[#1a1a1a] overflow-y-auto flex flex-col rounded-2xl border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] shadow-2xl">
         <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] shrink-0">
           <h2 className="text-gray-900 dark:text-gray-100 text-lg sm:text-xl font-semibold">New Jobbing</h2>
           <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-[#2a2a2a] text-gray-400 dark:text-gray-500 transition-all duration-200 hover:text-gray-600 dark:hover:text-gray-300">
@@ -80,6 +82,37 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
 
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
           <div className="px-4 sm:px-5 py-3 sm:py-4 flex flex-col gap-3 sm:gap-4 flex-1">
+            {/* Payment Type Toggle */}
+            <div>
+              <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">Payment Type</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => set("isPurchaseOrder", false)}
+                  className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    !form.isPurchaseOrder
+                      ? "bg-[#C53030] text-white border-[#C53030]"
+                      : "bg-white dark:bg-[#1a1a1a] text-gray-600 dark:text-gray-400 border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] hover:border-[#C53030]"
+                  }`}
+                >
+                  <Building2 size={16} />
+                  Normal Job
+                </button>
+                <button
+                  type="button"
+                  onClick={() => set("isPurchaseOrder", true)}
+                  className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    form.isPurchaseOrder
+                      ? "bg-[#C53030] text-white border-[#C53030]"
+                      : "bg-white dark:bg-[#1a1a1a] text-gray-600 dark:text-gray-400 border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] hover:border-[#C53030]"
+                  }`}
+                >
+                  <CreditCard size={16} />
+                  Purchase Order
+                </button>
+              </div>
+            </div>
+
             {/* Urgent Toggle */}
             <div
               onClick={() => set("isUrgent", !form.isUrgent)}
@@ -146,7 +179,7 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Description / Specs *</label>
               <textarea required value={form.description} onChange={(e) => set("description", e.target.value)}
-                rows={3}                 placeholder="Size, color, design details, material..."
+                rows={3} placeholder="Size, color, design details, material..."
                 className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 resize-none transition-all duration-200" />
             </div>
 
@@ -202,6 +235,15 @@ export function NewJobbingModal({ onClose, onSave }: NewJobbingModalProps) {
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
               </div>
             </div>
+
+            {/* Due Date - only for Purchase Orders */}
+            {form.isPurchaseOrder && (
+              <div>
+                <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">Payment Due Date</label>
+                <input type="date" value={form.dueDate} onChange={(e) => set("dueDate", e.target.value)}
+                  className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
+              </div>
+            )}
 
             {/* Total & Balance */}
             {amount > 0 && (

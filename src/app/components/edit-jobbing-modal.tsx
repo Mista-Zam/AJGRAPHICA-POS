@@ -49,9 +49,9 @@ export function EditJobbingModal({ jobbing, onClose, onUpdate }: EditJobbingModa
   const balance = form.amount - form.downPayment;
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      <div className="hidden sm:block flex-1 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="w-full sm:max-w-[min(420px,90vw)] bg-white dark:bg-[#1a1a1a] h-full overflow-y-auto flex flex-col sm:border-l border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] shadow-2xl animate-slide-in-right">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-[min(640px,95vw)] max-h-[90vh] bg-white dark:bg-[#1a1a1a] overflow-y-auto flex flex-col rounded-2xl border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] shadow-2xl">
         <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] shrink-0">
           <h2 className="text-gray-900 dark:text-gray-100 text-lg sm:text-xl font-semibold">Edit Jobbing</h2>
           <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-[#2a2a2a] text-gray-400 dark:text-gray-500 transition-all duration-200 hover:text-gray-600 dark:hover:text-gray-300">

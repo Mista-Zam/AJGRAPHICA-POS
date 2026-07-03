@@ -20,25 +20,25 @@ function openPrintWindow(jobbing: Jobbing, shopName: string, shopAddress: string
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt - ${jobbing.id}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Courier New', monospace; max-width: 320px; margin: 0 auto; padding: 16px; color: #222; }
-  .header { text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px dashed #222; }
-  .header img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
-  .header h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-  .header p { font-size: 11px; color: #555; margin-top: 2px; }
-  .receipt-id { text-align: center; font-size: 10px; color: #888; margin-bottom: 12px; font-family: monospace; }
-  .section { margin-bottom: 12px; }
-  .section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 4px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-  .row { display: flex; justify-content: space-between; font-size: 12px; padding: 2px 0; }
+  body { font-family: 'Courier New', monospace; max-width: 380px; margin: 0 auto; padding: 20px; color: #222; }
+  .header { text-align: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px dashed #222; }
+  .header img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+  .header h1 { font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+  .header p { font-size: 13px; color: #555; margin-top: 3px; }
+  .receipt-id { text-align: center; font-size: 12px; color: #888; margin-bottom: 14px; font-family: monospace; }
+  .section { margin-bottom: 14px; }
+  .section-title { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 6px; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+  .row { display: flex; justify-content: space-between; font-size: 14px; padding: 3px 0; }
   .row .label { color: #666; }
   .row .value { font-weight: 600; text-align: right; }
-  .total-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; padding: 4px 0; }
-  .divider { border-top: 1px dashed #ccc; margin: 8px 0; }
-  .footer { text-align: center; font-size: 10px; color: #888; margin-top: 16px; padding-top: 12px; border-top: 2px dashed #222; }
+  .total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; padding: 6px 0; }
+  .divider { border-top: 1px dashed #ccc; margin: 10px 0; }
+  .footer { text-align: center; font-size: 12px; color: #888; margin-top: 20px; padding-top: 14px; border-top: 2px dashed #222; }
   .balance-due { color: ${balance > 0 ? "#991B1B" : "#0F6E56"}; font-weight: bold; }
-  .payment-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 2px; border: 1px solid #ccc; margin-top: 4px; }
-  .amount-box { border: 1px solid #222; padding: 8px; text-align: center; margin: 8px 0; }
-  .amount-box .amount { font-size: 22px; font-weight: bold; }
-  .amount-box .label { font-size: 9px; color: #666; text-transform: uppercase; }
+  .payment-badge { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 3px; border: 1px solid #ccc; margin-top: 6px; }
+  .amount-box { border: 1px solid #222; padding: 12px; text-align: center; margin: 10px 0; }
+  .amount-box .amount { font-size: 26px; font-weight: bold; }
+  .amount-box .label { font-size: 11px; color: #666; text-transform: uppercase; }
   @media print { body { padding: 0; } }
 </style></head><body>
   <div class="header">
@@ -103,86 +103,86 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
           </button>
         </div>
 
-        <div className="p-4 sm:p-5 font-mono text-sm">
+        <div className="p-4 sm:p-5 font-mono text-base">
           <div className="text-center mb-4 pb-3 border-b-2 border-dashed border-gray-300 dark:border-gray-600">
-            <img src="/logo.jpg" alt={shopName} className="w-10 h-10 object-cover rounded-lg mx-auto mb-2" />
-            <div className="text-base font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">{shopName}</div>
-            <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">{shopAddress}</div>
-            <div className="text-[10px] text-gray-500 dark:text-gray-400">{shopContact}</div>
-            <div className="text-[10px] text-gray-500 dark:text-gray-400">Facebook: {shopFacebook}</div>
+            <img src="/logo.jpg" alt={shopName} className="w-12 h-12 object-cover rounded-lg mx-auto mb-2" />
+            <div className="text-lg font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">{shopName}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{shopAddress}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{shopContact}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Facebook: {shopFacebook}</div>
           </div>
 
-          <div className="text-center text-[10px] text-gray-400 dark:text-gray-500 mb-3 font-sans">
+          <div className="text-center text-xs text-gray-400 dark:text-gray-500 mb-3 font-sans">
             {jobbing.id} &middot; {new Date().toLocaleDateString("en-PH", { weekday: "short", year: "numeric", month: "long", day: "numeric" })}
           </div>
 
-          <div className="border border-gray-800 dark:border-gray-300 p-3 text-center mb-4 rounded-lg">
-            <div className="text-[9px] uppercase tracking-wider text-gray-500 dark:text-gray-400">Total Amount</div>
-            <div className="text-xl font-bold text-gray-900 dark:text-gray-100">{formatPeso(jobbing.amount)}</div>
+          <div className="border border-gray-800 dark:border-gray-300 p-4 text-center mb-4 rounded-lg">
+            <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Total Amount</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{formatPeso(jobbing.amount)}</div>
           </div>
 
-          <div className="mb-3">
-            <div className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1 border-b border-gray-200 dark:border-gray-700 pb-0.5">Customer</div>
-            <div className="flex justify-between text-xs py-0.5">
+          <div className="mb-4">
+            <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5 border-b border-gray-200 dark:border-gray-700 pb-1">Customer</div>
+            <div className="flex justify-between text-sm py-1">
               <span className="text-gray-500 dark:text-gray-400">Name</span>
               <span className="font-semibold text-gray-800 dark:text-gray-200 text-right">{jobbing.customerName}</span>
             </div>
-            <div className="flex justify-between text-xs py-0.5">
+            <div className="flex justify-between text-sm py-1">
               <span className="text-gray-500 dark:text-gray-400">Contact</span>
               <span className="font-semibold text-gray-800 dark:text-gray-200">{jobbing.contactNumber}</span>
             </div>
             {jobbing.address && (
-              <div className="flex justify-between text-xs py-0.5">
+              <div className="flex justify-between text-sm py-1">
                 <span className="text-gray-500 dark:text-gray-400">Address</span>
-                <span className="font-semibold text-gray-800 dark:text-gray-200 text-right max-w-[180px]">{jobbing.address}</span>
+                <span className="font-semibold text-gray-800 dark:text-gray-200 text-right max-w-[200px]">{jobbing.address}</span>
               </div>
             )}
           </div>
 
-          <div className="mb-3">
-            <div className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1 border-b border-gray-200 dark:border-gray-700 pb-0.5">Job Details</div>
-            <div className="flex justify-between text-xs py-0.5">
+          <div className="mb-4">
+            <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5 border-b border-gray-200 dark:border-gray-700 pb-1">Job Details</div>
+            <div className="flex justify-between text-sm py-1">
               <span className="text-gray-500 dark:text-gray-400">Type</span>
               <span className="font-semibold text-gray-800 dark:text-gray-200">{jobbing.jobType}</span>
             </div>
             {jobbing.fabric && (
-              <div className="flex justify-between text-xs py-0.5">
+              <div className="flex justify-between text-sm py-1">
                 <span className="text-gray-500 dark:text-gray-400">Fabric</span>
                 <span className="font-semibold text-gray-800 dark:text-gray-200">{jobbing.fabric}</span>
               </div>
             )}
-            <div className="flex justify-between text-xs py-0.5">
+            <div className="flex justify-between text-sm py-1">
               <span className="text-gray-500 dark:text-gray-400">Quantity</span>
               <span className="font-semibold text-gray-800 dark:text-gray-200">{jobbing.quantity} pc{jobbing.quantity !== 1 ? "s" : ""}</span>
             </div>
-            <div className="flex justify-between text-xs py-0.5">
+            <div className="flex justify-between text-sm py-1">
               <span className="text-gray-500 dark:text-gray-400">Pickup Date</span>
               <span className="font-semibold text-gray-800 dark:text-gray-200">{new Date(jobbing.pickupDate).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}</span>
             </div>
-            <div className="text-[11px] text-gray-600 dark:text-gray-400 mt-1 pt-1 border-t border-gray-100 dark:border-gray-800">{jobbing.description}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1.5 pt-1.5 border-t border-gray-100 dark:border-gray-800">{jobbing.description}</div>
           </div>
 
           <div className="border-t border-dashed border-gray-300 dark:border-gray-600 my-3" />
 
-          <div className="mb-2">
-            <div className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Payment</div>
-            <div className="flex justify-between text-sm font-bold py-1">
+          <div className="mb-3">
+            <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">Payment</div>
+            <div className="flex justify-between text-base font-bold py-1.5">
               <span className="text-gray-700 dark:text-gray-300">Amount</span>
               <span className="text-gray-900 dark:text-gray-100">{formatPeso(jobbing.amount)}</span>
             </div>
-            <div className="flex justify-between text-xs py-0.5">
+            <div className="flex justify-between text-sm py-1">
               <span className="text-gray-500 dark:text-gray-400">Down Payment</span>
               <span className="text-gray-800 dark:text-gray-200">{formatPeso(jobbing.downPayment)}</span>
             </div>
-            <div className="border-t border-dashed border-gray-200 dark:border-gray-700 my-1" />
-            <div className="flex justify-between text-sm font-bold py-1">
+            <div className="border-t border-dashed border-gray-200 dark:border-gray-700 my-1.5" />
+            <div className="flex justify-between text-base font-bold py-1.5">
               <span className="text-gray-700 dark:text-gray-300">Balance Due</span>
               <span className={`${balance > 0 ? "text-[#991B1B]" : "text-[#0F6E56]"}`}>{formatPeso(balance)}</span>
             </div>
           </div>
 
-          <div className="text-center mt-3">
-            <span className={`text-[10px] px-2 py-0.5 rounded border ${
+          <div className="text-center mt-4">
+            <span className={`text-xs px-3 py-1 rounded border ${
               jobbing.paymentStatus === "Paid"
                 ? "bg-[#E8F5F1] text-[#0F6E56] border-[#A7D9CC]"
                 : jobbing.paymentStatus === "Partial"
@@ -194,13 +194,13 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
           </div>
 
           {jobbing.notes && (
-            <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
-              <div className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-0.5">Notes</div>
-              <div className="text-[11px] text-gray-600 dark:text-gray-400">{jobbing.notes}</div>
+            <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Notes</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">{jobbing.notes}</div>
             </div>
           )}
 
-          <div className="text-center text-[10px] text-gray-400 dark:text-gray-500 mt-4 pt-3 border-t-2 border-dashed border-gray-300 dark:border-gray-600">
+          <div className="text-center text-xs text-gray-400 dark:text-gray-500 mt-4 pt-3 border-t-2 border-dashed border-gray-300 dark:border-gray-600">
             Thank you for your patronage!
           </div>
         </div>
