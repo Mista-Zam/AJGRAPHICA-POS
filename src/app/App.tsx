@@ -19,8 +19,8 @@ type Page = "dashboard" | "jobbings" | "history" | "settings" | "finances";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [role, setRole] = useState<"admin" | "superadmin">("admin");
+  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem("auth_loggedIn") === "true");
+  const [role, setRole] = useState<"admin" | "superadmin">(() => (localStorage.getItem("auth_role") as "admin" | "superadmin") || "admin");
   const [page, setPage] = useState<Page>("dashboard");
   const [jobbings, setJobbings] = useState<Jobbing[]>([]);
   const [showNewJobbing, setShowNewJobbing] = useState(false);
@@ -215,7 +215,7 @@ export default function App() {
   };
 
   if (!loggedIn) {
-    return <LoginPage onLogin={(r) => { setRole(r); setLoggedIn(true); }} />;
+    return <LoginPage onLogin={(r) => { setRole(r); setLoggedIn(true); localStorage.setItem("auth_role", r); localStorage.setItem("auth_loggedIn", "true"); }} />;
   }
 
   return (
@@ -244,7 +244,7 @@ export default function App() {
           onNavigate={handleNavigate}
           jobbings={jobbings}
           onNewJobbing={() => { setShowNewJobbing(true); setSidebarOpen(false); }}
-          onLogout={() => setLoggedIn(false)}
+          onLogout={() => { setLoggedIn(false); localStorage.removeItem("auth_loggedIn"); localStorage.removeItem("auth_role"); }}
           shopName={shopSettings?.shopName || "Shop"}
         />
       </div>

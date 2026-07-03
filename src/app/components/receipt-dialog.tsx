@@ -22,6 +22,7 @@ function openPrintWindow(jobbing: Jobbing, shopName: string, shopAddress: string
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Courier New', monospace; max-width: 320px; margin: 0 auto; padding: 16px; color: #222; }
   .header { text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px dashed #222; }
+  .header img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
   .header h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
   .header p { font-size: 11px; color: #555; margin-top: 2px; }
   .receipt-id { text-align: center; font-size: 10px; color: #888; margin-bottom: 12px; font-family: monospace; }
@@ -41,6 +42,7 @@ function openPrintWindow(jobbing: Jobbing, shopName: string, shopAddress: string
   @media print { body { padding: 0; } }
 </style></head><body>
   <div class="header">
+    <img src="/logo.jpg" alt="${shopName}" />
     <h1>${shopName}</h1>
     <p>${shopAddress}</p>
     <p>${shopContact}</p>
@@ -103,6 +105,7 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
 
         <div className="p-4 sm:p-5 font-mono text-sm">
           <div className="text-center mb-4 pb-3 border-b-2 border-dashed border-gray-300 dark:border-gray-600">
+            <img src="/logo.jpg" alt={shopName} className="w-10 h-10 object-cover rounded-lg mx-auto mb-2" />
             <div className="text-base font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">{shopName}</div>
             <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">{shopAddress}</div>
             <div className="text-[10px] text-gray-500 dark:text-gray-400">{shopContact}</div>
