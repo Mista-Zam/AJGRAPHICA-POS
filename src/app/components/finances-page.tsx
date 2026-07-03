@@ -330,7 +330,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
         {/* Revenue Chart */}
         <div className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-3 sm:p-4 mb-4 card-shadow">
           <div className="flex items-center justify-between mb-3">
-            <div className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Revenue â€” {periodLabels[period]}</div>
+            <div className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">{periodLabels[period]}</div>
             <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-400">
                 <span className="flex items-center gap-1">
                   <span className="w-2.5 h-2.5 rounded-sm bg-[#0F6E56]" />
