@@ -158,9 +158,9 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
   }, [finances, jobbings, selectedPeriodKey, period]);
 
   const periodLabels: Record<Period, string> = {
-    weekly: "Weekly",
-    monthly: "Monthly",
-    annually: "Annual",
+    weekly: "Weekly Revenue",
+    monthly: "Monthly Revenue",
+    annually: "Annual Revenue",
   };
 
   const periodRevenue = periodJobbings.reduce((s, j) => s + j.amount, 0);
@@ -284,9 +284,9 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
               onChange={(e) => setPeriod(e.target.value as Period)}
               className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-4 py-2.5 pr-10 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 cursor-pointer font-medium card-shadow"
             >
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="annually">Annually</option>
+              <option value="weekly">Weekly Revenue</option>
+              <option value="monthly">Monthly Revenue</option>
+              <option value="annually">Annual Revenue</option>
             </select>
             <ChevronDown size={15} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
