@@ -9,10 +9,11 @@
   Moon,
   Sun,
   Calendar,
+  Users,
 } from "lucide-react";
 import type { Jobbing } from "../data/mock-data";
 
-type Page = "dashboard" | "jobbings" | "history" | "settings" | "finances";
+type Page = "dashboard" | "jobbings" | "history" | "settings" | "finances" | "users";
 
 interface SidebarProps {
   activePage: Page;
@@ -31,6 +32,7 @@ const baseNavItems: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: "jobbings", label: "Jobbings", icon: <ClipboardList size={20} /> },
   { id: "history", label: "History", icon: <History size={20} /> },
   { id: "finances", label: "Finances", icon: <TrendingUp size={20} /> },
+  { id: "users", label: "Users", icon: <Users size={20} /> },
   { id: "settings", label: "Settings", icon: <Settings size={20} /> },
 ];
 
@@ -56,7 +58,7 @@ export function Sidebar({ activePage, onNavigate, jobbings, onNewJobbing, onLogo
     .sort((a, b) => a.daysUntil - b.daysUntil)
     .slice(0, 6);
 
-  const navItems = role === "superadmin" ? baseNavItems : baseNavItems.filter((n) => n.id !== "finances");
+  const navItems = role === "superadmin" ? baseNavItems : baseNavItems.filter((n) => n.id !== "finances" && n.id !== "users");
 
   return (
     <aside className="w-[260px] shrink-0 flex flex-col h-full bg-white dark:bg-[#1a1a1a] border-r border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)]">
