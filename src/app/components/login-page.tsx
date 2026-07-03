@@ -3,12 +3,14 @@ import { Eye, EyeOff, AlertCircle, Shield, User, Lock, Mail } from "lucide-react
 import { login } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 
+const RESOLVE_USERNAME_URL = "https://pxaklzjiuncwgbzuqvis.supabase.co/functions/v1/server/resolve-username";
+
 interface LoginPageProps {
   onLogin: (role: "admin" | "superadmin") => void;
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -17,12 +19,22 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!email.trim()) { setError("Please enter your email."); return; }
+    if (!username.trim()) { setError("Please enter your username."); return; }
     if (!password) { setError("Please enter your password."); return; }
 
     setLoading(true);
     try {
-      await login(email.trim(), password);
+      const res = await fetch(RESOLVE_USERNAME_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim() }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body?.error ?? "Invalid username or password");
+      }
+      const { email } = await res.json();
+      await login(email, password);
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
@@ -30,7 +42,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         .maybeSingle();
       onLogin((profile?.role as "admin" | "superadmin") ?? "admin");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Invalid email or password");
+      setError(err instanceof Error ? err.message : "Invalid username or password");
     } finally {
       setLoading(false);
     }
@@ -112,15 +124,15 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Email</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Username</label>
               <div className="relative">
-                <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                 <input
-                  type="email"
+                  type="text"
                   autoFocus
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username"
                   className="w-full border border-gray-200 rounded-xl pl-10 pr-3.5 py-3 text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/15 bg-white text-gray-900 transition-all duration-200 placeholder:text-gray-400"
                 />
               </div>

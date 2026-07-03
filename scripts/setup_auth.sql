@@ -1,6 +1,10 @@
+-- Add username and email columns to profiles (if they don't exist)
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS email TEXT;
+
 -- Create profiles for existing auth users that don't have one
-INSERT INTO public.profiles (id, user_id, name, full_name, role)
-SELECT id, id, email, email, 'admin'
+INSERT INTO public.profiles (id, user_id, name, full_name, role, email)
+SELECT id, id, email, email, 'admin', email
 FROM auth.users
 WHERE id NOT IN (SELECT user_id FROM public.profiles WHERE user_id IS NOT NULL)
 ON CONFLICT DO NOTHING;
@@ -53,13 +57,15 @@ LANGUAGE plpgsql
 SECURITY DEFINER SET search_path = ''
 AS $$
 BEGIN
-  INSERT INTO public.profiles (id, user_id, name, full_name, role)
+  INSERT INTO public.profiles (id, user_id, name, full_name, role, email, username)
   VALUES (
     NEW.id,
     NEW.id,
     COALESCE(NEW.raw_user_meta_data ->> 'name', NEW.email),
     COALESCE(NEW.raw_user_meta_data ->> 'name', NEW.email),
-    COALESCE(NEW.raw_user_meta_data ->> 'role', 'admin')
+    COALESCE(NEW.raw_user_meta_data ->> 'role', 'admin'),
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data ->> 'username', NULL)
   );
   RETURN NEW;
 END;

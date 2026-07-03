@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useCallback } from "react";
-import { CheckCircle, AlertCircle, Plus, Key, Shield, User, Mail, Trash2 } from "lucide-react";
+import { CheckCircle, AlertCircle, Plus, Key, User } from "lucide-react";
 import { getSettings, saveSettings, type ShopSettings } from "@/lib/supabase-service";
 import { ADMIN_FUNCTION_URL } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -19,6 +19,8 @@ interface Profile {
   name: string;
   full_name: string;
   role: string;
+  username: string;
+  email: string;
   avatar_url: string | null;
 }
 
@@ -141,7 +143,7 @@ function UserManagement() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [newEmail, setNewEmail] = useState("");
+  const [newUsername, setNewUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState<"admin" | "superadmin">("admin");
@@ -176,17 +178,17 @@ function UserManagement() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreateError("");
-    if (!newEmail.trim() || !newPassword || !newName.trim()) { setCreateError("All fields required"); return; }
+    if (!newUsername.trim() || !newPassword || !newName.trim()) { setCreateError("All fields required"); return; }
     setCreating(true);
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       const res = await fetch(`${ADMIN_FUNCTION_URL}/create-user`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionData?.session?.access_token}` },
-        body: JSON.stringify({ email: newEmail.trim(), password: newPassword, name: newName.trim(), role: newRole }),
+        body: JSON.stringify({ username: newUsername.trim(), password: newPassword, name: newName.trim(), role: newRole }),
       });
       if (!res.ok) { setCreateError((await res.json()).error ?? "Failed to create user"); return; }
-      setNewEmail(""); setNewPassword(""); setNewName(""); setNewRole("admin");
+      setNewUsername(""); setNewPassword(""); setNewName(""); setNewRole("admin");
       await fetchProfiles();
     } catch {
       setCreateError("Failed to create user");
@@ -240,8 +242,8 @@ function UserManagement() {
                     <User size={14} className="text-[#C53030]" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{p.name || p.full_name || "Unnamed"}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-400 truncate">{p.role}</div>
+                  <div className="text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{p.name || p.full_name || "Unnamed"}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 truncate">@{p.username || "—"} &middot; {p.role}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
@@ -304,12 +306,12 @@ function UserManagement() {
           )}
           <form onSubmit={handleCreate} className="flex flex-col gap-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Field label="Name">
-                <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full name"
+              <Field label="Username">
+                <input value={newUsername} onChange={(e) => setNewUsername(e.target.value)} placeholder="e.g. juan"
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
               </Field>
-              <Field label="Email">
-                <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="user@example.com"
+              <Field label="Name">
+                <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full name"
                   className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
               </Field>
               <Field label="Password">
