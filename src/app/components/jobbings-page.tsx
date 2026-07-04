@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Eye, CheckCircle, AlertCircle, ChevronDown, Plus, Search, Trash2, X } from "lucide-react";
 import type { Jobbing, JobType, JobStatus, JobStage } from "../data/mock-data";
 import { formatPeso, formatDate, getPickupColor, STATUS_COLORS } from "../data/utils";
@@ -83,7 +83,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
           </div>
           <button
             onClick={onNewJobbing}
-            className="hidden sm:flex bg-[#C53030] hover:bg-[#991B1B] text-white text-base py-3 px-5 sm:px-6 rounded-xl items-center gap-2 transition-colors shrink-0 shadow-sm"
+            className="hidden sm:flex bg-[#778873] hover:bg-[#DC2626] text-white text-base py-3 px-5 sm:px-6 rounded-xl items-center gap-2 transition-colors shrink-0 shadow-sm"
           >
             <Plus size={18} /> New Jobbing
           </button>
@@ -97,14 +97,14 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search customer or ID..."
-              className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg pl-7 pr-2 py-1.5 text-[11px] sm:text-xs md:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 dark:placeholder-gray-500"
+              className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg pl-7 pr-2 py-1.5 text-[9px] sm:text-xs md:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 dark:placeholder-gray-500"
             />
           </div>
           <div className="relative">
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value as JobType | "All")}
-              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 pr-5 sm:pr-6 focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 cursor-pointer"
+              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 pr-5 sm:pr-6 focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 cursor-pointer"
             >
               <option value="All">All Types</option>
               {JOB_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -115,7 +115,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as JobStatus | "All")}
-              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 pr-5 sm:pr-6 focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 cursor-pointer"
+              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 pr-5 sm:pr-6 focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 cursor-pointer"
             >
               <option value="All">All Statuses</option>
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -123,7 +123,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
             <ChevronDown size={14} className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
           {(filterType !== "All" || filterStatus !== "All" || searchQuery) && (
-            <button onClick={() => { setFilterType("All"); setFilterStatus("All"); setSearchQuery(""); }} className="text-sm text-[#C53030] hover:underline whitespace-nowrap font-medium">Clear</button>
+            <button onClick={() => { setFilterType("All"); setFilterStatus("All"); setSearchQuery(""); }} className="text-sm text-[#778873] hover:underline whitespace-nowrap font-medium">Clear</button>
           )}
         </div>
 
@@ -138,13 +138,13 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
             <select
               value={bulkStage}
               onChange={(e) => setBulkStage(e.target.value as JobStage)}
-              className="appearance-none bg-white/10 border border-[rgba(255,255,255,0.2)] rounded-lg px-2 py-1.5 text-xs text-white pr-5 focus:outline-none focus:ring-2 focus:ring-[#C53030]/20 cursor-pointer"
+              className="appearance-none bg-white/10 border border-[rgba(255,255,255,0.2)] rounded-lg px-2 py-1.5 text-xs text-white pr-5 focus:outline-none focus:ring-2 focus:ring-[#778873]/20 cursor-pointer"
             >
               {BULK_STAGES.map((s) => <option key={s} value={s} style={{ color: "#111", background: "#fff" }}>{s}</option>)}
             </select>
             <button
               onClick={handleApplyBulk}
-              className="bg-[#991B1B] hover:bg-[#991B1B] text-white text-xs sm:text-sm py-1.5 px-3 sm:px-4 rounded-lg transition-colors font-medium shrink-0"
+              className="bg-[#DC2626] hover:bg-[#DC2626] text-white text-xs sm:text-sm py-1.5 px-3 sm:px-4 rounded-lg transition-colors font-medium shrink-0"
             >
               Apply
             </button>
@@ -162,7 +162,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
             return (
               <div
                 key={j.id}
-                className={`bg-white dark:bg-[#1a1a1a] border rounded-xl card-shadow overflow-hidden ${j.isUrgent && j.status !== "Done" ? "border-[#FECACA] dark:border-[#6a2020] bg-[#FEF2F2] dark:bg-[#3a1010]" : "border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]"}`}
+                className={`border rounded-xl card-shadow overflow-hidden ${j.isUrgent && j.status !== "Done" ? "border-[#FECACA] dark:border-[#9a6060] bg-[#FEE2E2] dark:bg-[#5a2020]" : j.isPurchaseOrder ? "bg-[#EDE0CC] dark:bg-[#8a7a5a] border-[#DCCFC0] dark:border-[#8a8a6a]" : "bg-white dark:bg-[#1a1a1a] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]"}`}
               >
                 {/* Card header */}
                 <div className="px-3 pt-2.5 pb-1.5 flex items-start justify-between gap-2">
@@ -171,48 +171,48 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                       type="checkbox"
                       checked={selectedIds.has(j.id)}
                       onChange={() => toggleSelect(j.id)}
-                      className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#C53030] focus:ring-[#C53030] shrink-0 cursor-pointer"
+                      className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#778873] focus:ring-[#778873] shrink-0 cursor-pointer"
                     />
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      {j.isUrgent && j.status !== "Done" && <AlertCircle size={15} className="text-[#991B1B] shrink-0" />}
+                      {j.isUrgent && j.status !== "Done" && <AlertCircle size={15} className="text-[#DC2626] shrink-0" />}
                       <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate">{j.customerName}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-[10px] text-gray-400 flex-wrap">
+                    <div className="flex items-center gap-1.5 text-[10px] text-gray-600 dark:text-gray-300 flex-wrap">
                       <span className="font-mono">{j.id}</span>
-                      <span>Â·</span>
+                      <span>·</span>
                       <span>{j.jobType}</span>
-                      {j.fabric && <><span>Â·</span><span>{j.fabric}</span></>}
-                      <span>Â·</span>
+                      {j.fabric && <><span>·</span><span>{j.fabric}</span></>}
+                      <span>·</span>
                       <span>Qty {j.quantity}</span>
                     </div>
                   </div>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full shrink-0 ${STATUS_COLORS[sk]}`}>{sk}</span>
-                </div>
+                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full shrink-0 ${STATUS_COLORS[sk]}`}>{sk}</span>
+                 </div>
 
                 {/* Description */}
                 <div className="px-3 pb-1.5">
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2">{j.description}</p>
+                  <p className="text-[9px] text-gray-600 dark:text-gray-300 line-clamp-2">{j.description}</p>
                 </div>
 
                 {/* Footer row */}
-                <div className={`px-3 py-2 flex items-center justify-between border-t ${j.isUrgent && j.status !== "Done" ? "border-[#FECACA]/40 dark:border-[#6a2020]/40" : "border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]"}`}>
+                <div className={`px-3 py-2 flex items-center justify-between border-t ${j.isUrgent && j.status !== "Done" ? "border-[#FECACA]/40 dark:border-[#9a6060]/40" : j.isPurchaseOrder ? "border-[#DCCFC0]/40 dark:border-[#8a8a6a]/40" : "border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]"}`}>
                   <div className="min-w-0">
-                    <div className={`text-[11px] font-semibold ${getPickupColor(j.pickupDate)}`}>{formatDate(j.pickupDate)}</div>
-                    <div className="text-[9px] text-gray-400 dark:text-gray-500">Pickup date</div>
+                    <div className={`text-[9px] font-semibold ${getPickupColor(j.pickupDate)}`}>{formatDate(j.pickupDate)}</div>
+                    <div className="text-[9px] text-gray-500 dark:text-gray-400">Pickup date</div>
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">{formatPeso(j.amount)}</div>
-                    <div className={`text-[9px] font-medium ${balance > 0 ? "text-[#991B1B]" : "text-[#0F6E56]"}`}>
+                    <div className={`text-[9px] font-medium ${balance > 0 ? "text-[#DC2626]" : "text-[#0F6E56]"}`}>
                       {balance > 0 ? `Bal: ${formatPeso(balance)}` : "Fully Paid"}
                     </div>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className={`px-2 py-1.5 flex gap-1 border-t ${j.isUrgent && j.status !== "Done" ? "border-[#FECACA]/40 dark:border-[#6a2020]/40" : "border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]"}`}>
-                  <button onClick={() => onViewJobbing(j.id)} className="flex-1 text-sm py-3 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-[#2a2a2a] flex items-center justify-center gap-1.5 transition-colors font-medium">
+                <div className={`px-2 py-1.5 flex gap-1 border-t ${j.isUrgent && j.status !== "Done" ? "border-[#FECACA]/40 dark:border-[#9a6060]/40" : j.isPurchaseOrder ? "border-[#DCCFC0]/40 dark:border-[#8a8a6a]/40" : "border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]"}`}>
+                  <button onClick={() => onViewJobbing(j.id)} className="flex-1 text-sm py-3 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-[#2a2a2a] flex items-center justify-center gap-1.5 transition-colors font-medium">
                     <Eye size={15} /> View
                   </button>
                   {j.status !== "Done" && (
@@ -221,7 +221,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                     </button>
                   )}
                   {isSuperadmin && (
-                    <button onClick={() => setDeleteId(j.id)} className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-400 dark:text-gray-500 hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] hover:text-[#991B1B] dark:hover:text-[#f87171] transition-colors">
+                    <button onClick={() => setDeleteId(j.id)} className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-[#FEE2E2] dark:hover:bg-[#5a2020] hover:text-[#DC2626] dark:hover:text-[#A1BC98] transition-colors">
                       <Trash2 size={15} />
                     </button>
                   )}
@@ -243,7 +243,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                         type="checkbox"
                         checked={selectedIds.size === filtered.length && filtered.length > 0}
                         onChange={toggleSelectAll}
-                        className="w-4 h-4 rounded border-gray-300 text-[#C53030] focus:ring-[#C53030] cursor-pointer"
+                        className="w-4 h-4 rounded border-gray-300 text-[#778873] focus:ring-[#778873] cursor-pointer"
                       />
                     </th>
                   )}
@@ -264,7 +264,9 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                       key={j.id}
                       className={`border-b border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.04)] last:border-0 transition-colors ${
                         j.isUrgent && j.status !== "Done"
-                          ? "bg-[#FEF2F2] dark:bg-[#3a1010] hover:bg-[#fde8e8] dark:hover:bg-[#4a1515]"
+                          ? "bg-[#FEE2E2] dark:bg-[#5a2020] hover:bg-[#fde8e8] dark:hover:bg-[#7a3030]"
+                          : j.isPurchaseOrder
+                          ? "bg-[#EDE0CC] dark:bg-[#8a7a5a] hover:bg-[#E5D5BD] dark:hover:bg-[#9a8a6a]"
                           : idx % 2 === 0
                           ? "bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
                           : "bg-gray-50/50 dark:bg-[#1a1a1a]/50 hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
@@ -276,22 +278,22 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                             type="checkbox"
                             checked={selectedIds.has(j.id)}
                             onChange={() => toggleSelect(j.id)}
-                            className="w-4 h-4 rounded border-gray-300 text-[#C53030] focus:ring-[#C53030] cursor-pointer"
+                            className="w-4 h-4 rounded border-gray-300 text-[#778873] focus:ring-[#778873] cursor-pointer"
                           />
                         </td>
                       )}
                       <td className="px-2 sm:px-3 md:px-4 py-3">
-                        <span className="text-[11px] sm:text-xs font-mono text-gray-400 dark:text-gray-500">{j.id}</span>
-                        {j.isUrgent && j.status !== "Done" && <AlertCircle size={15} className="inline ml-1 text-[#991B1B] dark:text-[#e87070]" />}
+                        <span className="text-[9px] sm:text-xs font-mono text-gray-600 dark:text-gray-300">{j.id}</span>
+                        {j.isUrgent && j.status !== "Done" && <AlertCircle size={15} className="inline ml-1 text-[#DC2626] dark:text-[#e87070]" />}
                       </td>
                       <td className="px-2 sm:px-3 md:px-4 py-3 font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap max-w-[100px] sm:max-w-[140px]">
                         <span className="block truncate text-sm">{j.customerName}</span>
                       </td>
-                      <td className="px-2 sm:px-3 md:px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs sm:text-sm">{j.jobType}</td>
-                      <td className="px-2 sm:px-3 md:px-4 py-3 text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">{j.fabric ?? "â€”"}</td>
+                      <td className="px-2 sm:px-3 md:px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap text-xs sm:text-sm">{j.jobType}</td>
+                      <td className="px-2 sm:px-3 md:px-4 py-3 text-[9px] sm:text-xs text-gray-600 dark:text-gray-300">{j.fabric ?? "—"}</td>
                       <td className="px-2 sm:px-3 md:px-4 py-3 max-w-[100px] sm:max-w-[160px]">
-                        <span className="block truncate text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">{j.description}</span>
-                        <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">Qty: {j.quantity}</span>
+                        <span className="block truncate text-[9px] sm:text-xs text-gray-600 dark:text-gray-300">{j.description}</span>
+                        <span className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-300">Qty: {j.quantity}</span>
                       </td>
                       <td className="px-2 sm:px-3 md:px-4 py-3">
                         <span className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap ${STATUS_COLORS[sk]}`}>{sk}</span>
@@ -301,25 +303,25 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                       </td>
                       <td className="px-2 sm:px-3 md:px-4 py-3 whitespace-nowrap">
                         <div className="text-gray-800 dark:text-gray-200 font-medium text-xs sm:text-sm">{formatPeso(j.amount)}</div>
-                        <div className={`text-[10px] sm:text-xs font-medium ${balance > 0 ? "text-[#991B1B] dark:text-[#e87070]" : "text-[#0F6E56] dark:text-[#5abb9e]"}`}>
+                        <div className={`text-[10px] sm:text-xs font-medium ${balance > 0 ? "text-[#DC2626] dark:text-[#e87070]" : "text-[#0F6E56] dark:text-[#5abb9e]"}`}>
                           {balance > 0 ? `Bal: ${formatPeso(balance)}` : "Paid"}
                         </div>
                       </td>
                       <td className="px-2 sm:px-3 md:px-4 py-3">
                         <div className="flex items-center gap-0.5 sm:gap-1">
                           <button onClick={() => onViewJobbing(j.id)} title="View"
-                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#C53030] dark:hover:text-[#f87171] transition-colors">
+                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] dark:hover:bg-[#5a2020] text-gray-500 dark:text-gray-400 hover:text-[#778873] dark:hover:text-[#A1BC98] transition-colors">
                             <Eye size={17} />
                           </button>
                           {j.status !== "Done" && (
                             <button onClick={() => setConfirmDoneId(j.id)} title="Mark Done"
-                              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#E8F5F1] dark:hover:bg-[#0a3a2e] text-gray-400 dark:text-gray-500 hover:text-[#0F6E56] dark:hover:text-[#5abb9e] transition-colors">
+                              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#E8F5F1] dark:hover:bg-[#0a3a2e] text-gray-500 dark:text-gray-400 hover:text-[#0F6E56] dark:hover:text-[#5abb9e] transition-colors">
                               <CheckCircle size={17} />
                             </button>
                           )}
                           {isSuperadmin && (
                             <button onClick={() => setDeleteId(j.id)} title="Delete"
-                              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#991B1B] dark:hover:text-[#f87171] transition-colors">
+                              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] dark:hover:bg-[#5a2020] text-gray-500 dark:text-gray-400 hover:text-[#DC2626] dark:hover:text-[#A1BC98] transition-colors">
                               <Trash2 size={17} />
                             </button>
                           )}
@@ -367,7 +369,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                 Cancel
               </button>
               <button onClick={() => { onDeleteJobbing?.(deleteId); setDeleteId(null); }}
-                className="flex-1 bg-[#991B1B] hover:bg-[#991B1B] text-white text-base py-3 rounded-lg transition-colors font-medium">
+                className="flex-1 bg-[#DC2626] hover:bg-[#DC2626] text-white text-base py-3 rounded-lg transition-colors font-medium">
                 Delete
               </button>
             </div>
@@ -377,3 +379,7 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
     </div>
   );
 }
+
+
+
+

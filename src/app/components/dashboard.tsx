@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { AlertCircle, ClipboardList, Clock, PhilippinePeso, Bell, CreditCard, AlertTriangle } from "lucide-react";
 import type { Jobbing } from "../data/mock-data";
@@ -39,9 +39,9 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
     return d.getTime() < today.getTime() && j.status !== "Done";
   });
 
-  const poJobbings = jobbings.filter((j) => j.isPurchaseOrder && (j.poStatus === "pending_payment" || j.poStatus === "partially_paid"));
+  const poJobbings = jobbings.filter((j) => j.isPurchaseOrder && j.status === "Done" && (j.poStatus === "pending_payment" || j.poStatus === "partially_paid"));
   const poOverdue = poJobbings.filter((j) => (j.dueDate || j.pickupDate) < today.toISOString().split("T")[0]);
-  const allAlerts = [...dueToday, ...overdue, ...poOverdue];
+  const allAlerts = [...new Map([...dueToday, ...overdue, ...poOverdue].map((j) => [j.id, j])).values()];
 
   const recent = [...jobbings]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -58,11 +58,11 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
     .slice(0, 5);
 
   const cards = [
-    { label: "Active Jobbings", value: active.length, icon: <ClipboardList size={22} />, color: "text-[#C53030]", bg: "bg-[#FEF2F2]" },
-    { label: "Urgent", value: urgent.length, icon: <AlertCircle size={22} />, color: "text-[#991B1B]", bg: "bg-[#FEF2F2]" },
+    { label: "Active Jobbings", value: active.length, icon: <ClipboardList size={22} />, color: "text-[#778873]", bg: "bg-[#FDF6ED]" },
+    { label: "Urgent", value: urgent.length, icon: <AlertCircle size={22} />, color: "text-[#DC2626]", bg: "bg-[#FDF6ED]" },
     { label: "Due Today", value: dueToday.length, icon: <Clock size={22} />, color: "text-amber-600", bg: "bg-amber-50" },
     { label: "Collected Today", value: formatPeso(earnedToday), icon: <PhilippinePeso size={22} />, color: "text-[#0F6E56]", bg: "bg-[#E8F5F1]" },
-    { label: "Purchase Orders", value: poJobbings.length, icon: <CreditCard size={22} />, color: "text-[#C53030]", bg: "bg-[#FEF2F2]" },
+    { label: "Purchase Orders", value: poJobbings.length, icon: <CreditCard size={22} />, color: "text-[#778873]", bg: "bg-[#FDF6ED]" },
   ];
 
   return (
@@ -83,7 +83,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                 className="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-[#2a2a2a] text-gray-500 dark:text-gray-400 transition-colors"
               >
                 <Bell size={20} />
-                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#991B1B] text-white text-[9px] font-bold leading-none">
+                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#DC2626] text-white text-[10px] font-bold leading-none">
                   {allAlerts.length}
                 </span>
               </button>
@@ -104,15 +104,15 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                             onClick={() => { onViewJobbing(j.id); setShowNotif(false); }}
                             className="w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors border-b border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.04)] last:border-0"
                           >
-                            <span className={`w-2 h-2 rounded-full shrink-0 ${overdueDate ? "bg-[#991B1B]" : "bg-amber-500"}`} />
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${overdueDate ? "bg-[#DC2626]" : "bg-amber-500"}`} />
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{j.customerName}</div>
-                              <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate">
-                                {j.jobType} · {j.id}
+                              <div className="text-[9px] text-gray-400 dark:text-gray-500 truncate">
+                                {j.jobType} � {j.id}
                                 {isPO && <span className="ml-1 text-amber-600 font-semibold">[PO]</span>}
                               </div>
                             </div>
-                            <span className={`text-[10px] font-semibold shrink-0 ${overdueDate ? "text-[#991B1B]" : "text-amber-600"}`}>
+                            <span className={`text-[10px] font-semibold shrink-0 ${overdueDate ? "text-[#DC2626]" : "text-amber-600"}`}>
                               {overdueDate ? "Overdue" : "Today"}
                             </span>
                           </button>
@@ -126,11 +126,11 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
           )}
         </div>
 
-        {/* Summary Cards â€” 2-col on mobile, 3-col on sm, 4-col on md+ */}
+        {/* Summary Cards — 2-col on mobile, 3-col on sm, 4-col on md+ */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 mb-4 sm:mb-5">
           {cards.map((c) => (
             <div key={c.label} className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-2.5 sm:p-4 card-shadow relative overflow-hidden">
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C53030] rounded-l-xl" />
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#778873] rounded-l-xl" />
               <div className="flex items-center justify-between mb-1.5 sm:mb-2">
                 <span className="text-[9px] sm:text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium leading-tight truncate">{c.label}</span>
                 <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg ${c.bg} flex items-center justify-center ${c.color} shrink-0`}>{c.icon}</div>
@@ -145,7 +145,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
           ))}
         </div>
 
-        {/* Chart + Alerts â€” stacked on mobile, side-by-side on lg+ */}
+        {/* Chart + Alerts — stacked on mobile, side-by-side on lg+ */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-5">
           {/* Bar Chart */}
           <div className="lg:col-span-3 bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-3 sm:p-4 card-shadow">
@@ -161,7 +161,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                     />
                     <Bar dataKey="jobs" radius={[4, 4, 0, 0]} maxBarSize={32}>
                       {weeklyData.map((_, i) => (
-                        <Cell key={i} fill={i === new Date().getDay() ? "#C53030" : "#D1D5DB"} />
+                        <Cell key={i} fill={i === new Date().getDay() ? "#778873" : "#D1D5DB"} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -179,13 +179,13 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                   onClick={() => onViewJobbing(j.id)}
                   className={`text-left text-base px-4 py-3 rounded-lg flex items-center gap-2 w-full transition-colors hover:opacity-80 font-medium ${
                     j.isUrgent || j.diff < 0
-                      ? "bg-[#FEF2F2] dark:bg-[#3a1010] text-[#991B1B] dark:text-[#e87070]"
+                      ? "bg-[#FEE2E2] dark:bg-[#5a2020] text-[#DC2626] dark:text-[#e87070]"
                       : j.diff === 0
                       ? "bg-[#E8F5F1] dark:bg-[#0a3a2e] text-[#0F6E56] dark:text-[#5abb9e]"
                       : "bg-amber-50 dark:bg-[#3a2e00] text-amber-700 dark:text-amber-400"
                   }`}
                 >
-                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${j.isUrgent || j.diff < 0 ? "bg-[#991B1B]" : j.diff === 0 ? "bg-[#0F6E56]" : "bg-amber-500"}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${j.isUrgent || j.diff < 0 ? "bg-[#DC2626]" : j.diff === 0 ? "bg-[#0F6E56]" : "bg-amber-500"}`} />
                   <span className="truncate flex-1 min-w-0">{j.customerName}</span>
                   <span className="font-semibold shrink-0 text-[10px] sm:text-xs">
                     {j.diff < 0 ? "Overdue" : j.diff === 0 ? "Today" : `${j.diff}d`}
@@ -199,7 +199,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
           </div>
         </div>
 
-        {/* Recent Jobbings â€” table on sm+, cards on mobile */}
+        {/* Recent Jobbings — table on sm+, cards on mobile */}
         <div className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl card-shadow overflow-hidden">
           <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]">
             <div className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Recent Jobbings</div>
@@ -211,16 +211,16 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
               <button
                 key={j.id}
                 onClick={() => onViewJobbing(j.id)}
-                className={`w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors ${j.isUrgent ? "bg-[#FEF2F2] dark:bg-[#3a1010]" : ""}`}
+                className={`w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors ${j.isUrgent ? "bg-[#FEE2E2] dark:bg-[#5a2020]" : ""}`}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="font-medium text-sm text-gray-800 dark:text-gray-200 truncate">{j.customerName}</span>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full shrink-0 ${STATUS_COLORS[(j.status as string) === "For Pickup" || (j.status as string) === "Done" ? j.status : j.isUrgent ? "Urgent" : j.status]}`}>
-                      {(j.status as string) === "For Pickup" || (j.status as string) === "Done" ? j.status : j.isUrgent && (j.status as string) !== "Done" ? "Urgent" : j.status}
-                    </span>
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="font-medium text-sm text-gray-800 dark:text-gray-200 truncate">{j.customerName}</span>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full shrink-0 ${((st) => STATUS_COLORS[st])(j.status === "For Pickup" || j.status === "Done" ? j.status : j.isUrgent ? "Urgent" : j.status)}`}>
+                          {j.status === "For Pickup" || j.status === "Done" ? j.status : j.isUrgent ? "Urgent" : j.status}
+                        </span>
                   </div>
-                  <div className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 truncate">{j.jobType} Â· {j.id}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 truncate">{j.jobType} · {j.id}</div>
                 </div>
                 <div className="text-right shrink-0">
                   <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{formatPeso(j.amount)}</div>
@@ -247,7 +247,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                     onClick={() => onViewJobbing(j.id)}
                     className={`border-b border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.04)] last:border-0 cursor-pointer transition-colors ${
                       j.isUrgent
-                        ? "bg-[#FEF2F2] dark:bg-[#3a1010] hover:bg-[#fde8e8] dark:hover:bg-[#4a1515]"
+                        ? "bg-[#FEE2E2] dark:bg-[#5a2020] hover:bg-[#fde8e8] dark:hover:bg-[#7a3030]"
                         : idx % 2 === 0
                         ? "bg-white dark:bg-[#1a1a1a] hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
                         : "bg-gray-50/50 dark:bg-[#1a1a1a]/50 hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
@@ -259,8 +259,8 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                     <td className={`px-3 sm:px-4 py-2.5 text-xs whitespace-nowrap ${getPickupColor(j.pickupDate)}`}>{formatDate(j.pickupDate)}</td>
                     <td className="px-3 sm:px-4 py-2.5 text-gray-700 dark:text-gray-300 whitespace-nowrap">{formatPeso(j.amount)}</td>
                     <td className="px-3 sm:px-4 py-2.5 whitespace-nowrap">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[(j.status as string) === "For Pickup" || (j.status as string) === "Done" ? j.status : j.isUrgent ? "Urgent" : j.status]}`}>
-                        {(j.status as string) === "For Pickup" || (j.status as string) === "Done" ? j.status : j.isUrgent && (j.status as string) !== "Done" ? "Urgent" : j.status}
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${((st) => STATUS_COLORS[st])(j.status === "For Pickup" || j.status === "Done" ? j.status : j.isUrgent ? "Urgent" : j.status)}`}>
+                        {j.status === "For Pickup" || j.status === "Done" ? j.status : j.isUrgent ? "Urgent" : j.status}
                       </span>
                     </td>
                   </tr>
@@ -273,3 +273,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
     </div>
   );
 }
+
+
+
+

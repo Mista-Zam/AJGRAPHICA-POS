@@ -20,6 +20,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
   const poJobbings = useMemo(() => {
     return jobbings
       .filter((j) => j.isPurchaseOrder)
+      .filter((j) => j.status === "Done")
       .filter((j) => j.poStatus === "pending_payment" || j.poStatus === "partially_paid");
   }, [jobbings]);
 
@@ -59,13 +60,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
     [poJobbings]
   );
 
-  const paidSoFar = (j: Jobbing) => {
-    if (j.poStatus === "paid") return j.amount;
-    const payments = j.amount - (j.amount - j.downPayment);
-    return j.downPayment;
-  };
-
-  const remainingBalance = (j: Jobbing) => Math.max(0, j.amount - paidSoFar(j));
+  const remainingBalance = (j: Jobbing) => Math.max(0, j.amount - j.downPayment);
   const isOverdue = (j: Jobbing) => (j.dueDate || j.pickupDate) < today;
 
   return (
@@ -99,7 +94,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
             <AlertTriangle size={16} />
             <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider">Overdue</span>
           </div>
-          <div className={`text-lg sm:text-2xl font-bold ${overdueCount > 0 ? "text-[#991B1B]" : "text-gray-900 dark:text-gray-100"}`}>
+          <div className={`text-lg sm:text-2xl font-bold ${overdueCount > 0 ? "text-[#DC2626]" : "text-gray-900 dark:text-gray-100"}`}>
             {overdueCount}
           </div>
         </div>
@@ -122,13 +117,13 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(0); }}
             placeholder="Search by PO#, customer, or job type..."
-            className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl bg-white dark:bg-[#1a1a1a] dark:text-gray-200 focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 transition-all duration-200"
+            className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl bg-white dark:bg-[#1a1a1a] dark:text-gray-200 focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 transition-all duration-200"
           />
         </div>
         <select
           value={filterStatus}
           onChange={(e) => { setFilterStatus(e.target.value); setPage(0); }}
-          className="w-full sm:w-auto border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-3 py-2.5 text-xs sm:text-sm bg-white dark:bg-[#1a1a1a] dark:text-gray-200 focus:outline-none focus:border-[#C53030] transition-all duration-200"
+          className="w-full sm:w-auto border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-3 py-2.5 text-xs sm:text-sm bg-white dark:bg-[#1a1a1a] dark:text-gray-200 focus:outline-none focus:border-[#778873] transition-all duration-200"
         >
           <option value="all">All Status</option>
           <option value="pending">Pending Payment</option>
@@ -165,7 +160,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
                     className="border-b border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.04)] hover:bg-gray-50 dark:hover:bg-[#222] transition-colors cursor-pointer"
                     onClick={() => onViewJobbing(j.id)}
                   >
-                    <td className="px-3 sm:px-4 py-3 font-mono text-[11px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
+                    <td className="px-3 sm:px-4 py-3 font-mono text-[9px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
                       {j.id}
                     </td>
                     <td className="px-3 sm:px-4 py-3">
@@ -176,12 +171,12 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
                       ₱{j.amount.toLocaleString("en-PH")}
                     </td>
                     <td className="px-3 sm:px-4 py-3 text-right hidden sm:table-cell">
-                      <span className={`font-semibold text-xs sm:text-sm ${balance > 0 ? "text-[#991B1B]" : "text-[#0F6E56]"}`}>
+                      <span className={`font-semibold text-xs sm:text-sm ${balance > 0 ? "text-[#DC2626]" : "text-[#0F6E56]"}`}>
                         ₱{balance.toLocaleString("en-PH")}
                       </span>
                     </td>
                     <td className="px-3 sm:px-4 py-3 text-center hidden sm:table-cell">
-                      <span className={`text-[10px] sm:text-xs font-medium ${overdue ? "text-[#991B1B]" : "text-gray-500 dark:text-gray-400"}`}>
+                      <span className={`text-[10px] sm:text-xs font-medium ${overdue ? "text-[#DC2626]" : "text-gray-500 dark:text-gray-400"}`}>
                         {j.dueDate || j.pickupDate}
                         {overdue && <span className="ml-1">(Overdue)</span>}
                       </span>
@@ -191,7 +186,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
                         isPartial
                           ? "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400"
                           : overdue
-                          ? "bg-red-50 dark:bg-red-900/20 text-[#991B1B] dark:text-red-400"
+                          ? "bg-red-50 dark:bg-red-900/20 text-[#DC2626] dark:text-red-400"
                           : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                       }`}>
                         {isPartial ? "Partial" : overdue ? "Overdue" : "Pending"}
@@ -208,7 +203,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); onReceivePayment(j.id); }}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-[#C53030] hover:bg-[#991B1B] text-white text-[10px] sm:text-xs font-medium rounded-lg transition-all duration-200 active:scale-[0.97]"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-[#778873] hover:bg-[#DC2626] text-white text-[10px] sm:text-xs font-medium rounded-lg transition-all duration-200 active:scale-[0.97]"
                         >
                           <CheckCircle2 size={14} />
                           Pay
@@ -216,7 +211,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
                         {onDeleteJobbing && (
                           <button
                             onClick={(e) => { e.stopPropagation(); if (confirm(`Delete ${j.id}?`)) onDeleteJobbing(j.id); }}
-                            className="inline-flex items-center justify-center w-7 h-7 text-gray-400 hover:text-[#991B1B] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                            className="inline-flex items-center justify-center w-7 h-7 text-gray-400 hover:text-[#DC2626] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
                             title="Delete"
                           >
                             <Trash2 size={14} />
@@ -266,3 +261,7 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
     </div>
   );
 }
+
+
+
+

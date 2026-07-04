@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { LoginPage } from "./components/login-page";
 import { Sidebar } from "./components/sidebar";
 import { Dashboard } from "./components/dashboard";
@@ -170,10 +170,21 @@ export default function App() {
         console.error("Job not found in state:", id);
         return;
       }
-      const updated: Jobbing = { ...job, status: "Normal", stage: "For Pickup" };
+      const wasPaidPO = job.isPurchaseOrder && job.poStatus === "paid";
+      const updated: Jobbing = {
+        ...job,
+        status: "Normal",
+        stage: "For Pickup",
+        isPurchaseOrder: wasPaidPO ? false : job.isPurchaseOrder,
+        poStatus: wasPaidPO ? "none" : job.isPurchaseOrder ? "pending_payment" : "none",
+        paymentStatus: "Unpaid",
+        downPayment: 0,
+        paymentCompletedAt: undefined,
+      };
       await Promise.all([updateJobbing(updated), deleteFinanceRecord(id)]);
       setJobbings((prev) => prev.map((j) => j.id === id ? updated : j));
       setFinances((prev) => prev.filter((f) => f.id !== id));
+      setSelectedJobId(null);
       setToast("Job reopened!");
     } catch (err) {
       console.error("Failed to reopen job:", err);
@@ -255,7 +266,7 @@ export default function App() {
         />
       )}
 
-      {/* Sidebar â€” fixed drawer on mobile, static on desktop */}
+      {/* Sidebar — fixed drawer on mobile, static on desktop */}
       <div
         className={`
           fixed inset-y-0 left-0 z-50 lg:static lg:z-auto
@@ -271,6 +282,7 @@ export default function App() {
           onNavigate={handleNavigate}
           jobbings={jobbings}
           onNewJobbing={() => { setShowNewJobbing(true); setSidebarOpen(false); }}
+          onViewJobbing={handleViewJobbing}
           onLogout={() => { authLogout().catch(console.error); setLoggedIn(false); }}
           shopName={shopSettings?.shopName || "Shop"}
         />
@@ -288,14 +300,14 @@ export default function App() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-center">
-            <div className="w-5 h-5 rounded bg-[#C53030] flex items-center justify-center shrink-0">
+            <div className="w-5 h-5 rounded bg-[#778873] flex items-center justify-center shrink-0">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
             </div>
-            <span className="text-xs font-semibold text-[#C53030] tracking-wide uppercase truncate">{shopSettings?.shopName || "Shop"}</span>
+            <span className="text-xs font-semibold text-[#778873] tracking-wide uppercase truncate">{shopSettings?.shopName || "Shop"}</span>
           </div>
           <button
             onClick={() => setShowNewJobbing(true)}
-            className="text-sm bg-[#C53030] hover:bg-[#991B1B] text-white px-3 py-1.5 rounded-lg shrink-0 font-medium shadow-sm"
+            className="text-sm bg-[#778873] hover:bg-[#5A6B56] text-white px-3 py-1.5 rounded-lg shrink-0 font-medium shadow-sm"
           >
             + New
           </button>
@@ -396,7 +408,7 @@ export default function App() {
                 onClick={() => handleNavigate(item.id)}
                 className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition-colors min-w-0 ${
                   isActive
-                    ? "text-[#C53030] dark:text-[#f87171]"
+                    ? "text-[#778873] dark:text-[#A1BC98]"
                     : "text-gray-400 dark:text-gray-500"
                 }`}
               >
@@ -429,12 +441,32 @@ export default function App() {
           onClose={() => setReceivePaymentJobId(null)}
           onComplete={(updated) => {
             setJobbings((prev) => prev.map((j) => j.id === updated.id ? updated : j));
-            setReceivePaymentJobId(null);
             if (updated.poStatus === "paid") {
-              setToast("Payment complete! PO marked as paid.");
-            } else {
-              setToast("Payment recorded!");
+              const record = {
+                id: updated.id,
+                customerName: updated.customerName,
+                jobType: updated.jobType,
+                description: updated.description,
+                quantity: updated.quantity,
+                amount: updated.amount,
+                downPayment: updated.downPayment,
+                paymentStatus: "Paid",
+                pickupDate: updated.pickupDate,
+                completedAt: updated.paymentCompletedAt || new Date().toISOString().split("T")[0],
+                createdAt: updated.createdAt,
+              };
+              setFinances((prev) => {
+                const idx = prev.findIndex((f) => f.id === record.id);
+                if (idx >= 0) {
+                  const copy = [...prev];
+                  copy[idx] = record;
+                  return copy;
+                }
+                return [record, ...prev];
+              });
             }
+            setReceivePaymentJobId(null);
+            setToast(updated.poStatus === "paid" ? "Payment complete! PO marked as paid." : "Payment recorded!");
           }}
         />
       )}
@@ -451,10 +483,12 @@ export default function App() {
       )}
 
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-[#C53030] text-white px-4 py-2 rounded-lg shadow-lg text-sm">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-[#778873] text-white px-4 py-2 rounded-lg shadow-lg text-sm">
           {toast}
         </div>
       )}
     </div>
   );
 }
+
+

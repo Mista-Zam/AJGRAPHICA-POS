@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, DollarSign, ShoppingBag, Calendar, ChevronDown, Eye, ArrowLeft } from "lucide-react";
 import type { FinanceRecord } from "@/lib/supabase-service";
@@ -170,7 +170,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="p-3 sm:p-4 md:p-6 max-w-6xl mx-auto animate-fade-in">
           {/* Back */}
-          <button onClick={() => setSelectedPeriodKey(null)} className="flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 hover:text-[#C53030] dark:hover:text-[#f87171] mb-4 transition-colors py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2a2a2a] px-3 -ml-3">
+          <button onClick={() => setSelectedPeriodKey(null)} className="flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 hover:text-[#778873] dark:hover:text-[#A1BC98] mb-4 transition-colors py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2a2a2a] px-3 -ml-3">
             <ArrowLeft size={18} /> Back to overview
           </button>
 
@@ -178,7 +178,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
           <div className="mb-4">
             <h1 className="text-gray-900 dark:text-gray-100">{formatPeriodLabel(selectedPeriodKey, period)}</h1>
             <p className="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              {periodJobbings.length} job{periodJobbings.length !== 1 ? "s" : ""} completed â€” {formatPeso(periodRevenue)} total revenue
+              {periodJobbings.length} job{periodJobbings.length !== 1 ? "s" : ""} completed — {formatPeso(periodRevenue)} total revenue
             </p>
           </div>
 
@@ -197,9 +197,9 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
                       </div>
                       <div className="flex items-center gap-1.5 text-[10px] text-gray-400 flex-wrap">
                         <span className="font-mono">{j.id}</span>
-                        <span>Â·</span>
+                        <span>·</span>
                         <span>{j.jobType}</span>
-                        {j.fabric && <><span>Â·</span><span>{j.fabric}</span></>}
+                        {j.fabric && <><span>·</span><span>{j.fabric}</span></>}
                       </div>
                     </div>
                     <div className="text-right shrink-0">
@@ -208,7 +208,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
                   </div>
                 </div>
                 <div className="px-3 pb-1.5">
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2">{j.description}</p>
+                  <p className="text-[9px] text-gray-500 dark:text-gray-400 line-clamp-2">{j.description}</p>
                 </div>
                 <div className="px-2 py-1.5 border-t border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]">
                   <button onClick={() => onViewJobbing(j.id)} className="w-full text-sm py-3 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-[#2a2a2a] flex items-center justify-center gap-1.5 transition-colors font-medium">
@@ -245,14 +245,14 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
                       </td>
                       <td className="px-3 sm:px-4 py-3 font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">{j.customerName}</td>
                       <td className="px-3 sm:px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-sm">{j.jobType}</td>
-                      <td className="px-3 sm:px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{j.fabric ?? "â€”"}</td>
+                      <td className="px-3 sm:px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{j.fabric ?? "—"}</td>
                       <td className="px-3 sm:px-4 py-3 max-w-[160px]">
                         <span className="block truncate text-sm text-gray-500 dark:text-gray-400">{j.description}</span>
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-right font-semibold text-gray-900 dark:text-gray-100 whitespace-nowrap">{formatPeso(j.amount)}</td>
                       <td className="px-3 sm:px-4 py-3">
                         <button onClick={() => onViewJobbing(j.id)}
-                          className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#C53030] dark:hover:text-[#f87171] transition-colors">
+                          className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FDF6ED] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#778873] dark:hover:text-[#A1BC98] transition-colors">
                           <Eye size={17} />
                         </button>
                       </td>
@@ -282,7 +282,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
             <select
               value={period}
               onChange={(e) => setPeriod(e.target.value as Period)}
-              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-4 py-2.5 pr-10 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 cursor-pointer font-medium card-shadow"
+              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-4 py-2.5 pr-10 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 cursor-pointer font-medium card-shadow"
             >
               <option value="weekly">Weekly Revenue</option>
               <option value="monthly">Monthly Revenue</option>
@@ -295,7 +295,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           <div className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-3 sm:p-4 flex items-center gap-3 card-shadow">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-[#FEF2F2] dark:bg-[#3a1010] flex items-center justify-center text-[#C53030] dark:text-[#f87171] shrink-0">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-[#FDF6ED] dark:bg-[#3a1010] flex items-center justify-center text-[#778873] dark:text-[#A1BC98] shrink-0">
               <DollarSign size={22} />
             </div>
             <div className="min-w-0">
@@ -306,7 +306,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
             </div>
           </div>
           <div className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-3 sm:p-4 flex items-center gap-3 card-shadow">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-[#FEF2F2] dark:bg-[#3a1010] flex items-center justify-center text-[#C53030] dark:text-[#f87171] shrink-0">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-[#FDF6ED] dark:bg-[#3a1010] flex items-center justify-center text-[#778873] dark:text-[#A1BC98] shrink-0">
               <ShoppingBag size={22} />
             </div>
             <div className="min-w-0">
@@ -337,7 +337,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
                   Revenue
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-sm bg-[#991B1B]" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-[#5A6B56]" />
                   Jobs
                 </span>
             </div>
@@ -356,7 +356,7 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
                   ] as [string | number, string]}
                 />
                 <Bar dataKey="revenue" fill="#0F6E56" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                <Bar dataKey="jobs" fill="#991B1B" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                <Bar dataKey="jobs" fill="#5A6B56" radius={[4, 4, 0, 0]} maxBarSize={40} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -426,3 +426,6 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
     </div>
   );
 }
+
+
+

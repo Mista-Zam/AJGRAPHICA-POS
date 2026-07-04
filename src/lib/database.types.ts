@@ -177,3 +177,5 @@ export interface FinanceRecordRow {
   completed_at: string;
   created_at: string;
 }
+
+

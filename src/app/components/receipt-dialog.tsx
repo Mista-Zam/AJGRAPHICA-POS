@@ -1,4 +1,4 @@
-﻿import { X, Printer } from "lucide-react";
+import { X, Printer } from "lucide-react";
 import type { Jobbing } from "../data/mock-data";
 import { formatPeso, formatDateLong } from "../data/utils";
 
@@ -34,7 +34,7 @@ function openPrintWindow(jobbing: Jobbing, shopName: string, shopAddress: string
   .total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; padding: 6px 0; }
   .divider { border-top: 1px dashed #ccc; margin: 10px 0; }
   .footer { text-align: center; font-size: 12px; color: #888; margin-top: 20px; padding-top: 14px; border-top: 2px dashed #222; }
-  .balance-due { color: ${balance > 0 ? "#991B1B" : "#0F6E56"}; font-weight: bold; }
+  .balance-due { color: ${balance > 0 ? "#DC2626" : "#0F6E56"}; font-weight: bold; }
   .payment-badge { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 3px; border: 1px solid #ccc; margin-top: 6px; }
   .amount-box { border: 1px solid #222; padding: 12px; text-align: center; margin: 10px 0; }
   .amount-box .amount { font-size: 26px; font-weight: bold; }
@@ -177,7 +177,7 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
             <div className="border-t border-dashed border-gray-200 dark:border-gray-700 my-1.5" />
             <div className="flex justify-between text-base font-bold py-1.5">
               <span className="text-gray-700 dark:text-gray-300">Balance Due</span>
-              <span className={`${balance > 0 ? "text-[#991B1B]" : "text-[#0F6E56]"}`}>{formatPeso(balance)}</span>
+              <span className={`${balance > 0 ? "text-[#DC2626]" : "text-[#0F6E56]"}`}>{formatPeso(balance)}</span>
             </div>
           </div>
 
@@ -187,7 +187,7 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
                 ? "bg-[#E8F5F1] text-[#0F6E56] border-[#A7D9CC]"
                 : jobbing.paymentStatus === "Partial"
                 ? "bg-amber-50 text-amber-700 border-amber-200"
-                : "bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]"
+                : "bg-[#FDF6ED] text-[#DC2626] border-[#DCCFC0]"
             }`}>
               {jobbing.paymentStatus}
             </span>
@@ -211,7 +211,7 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
             Close
           </button>
           <button onClick={() => openPrintWindow(jobbing, shopName, shopAddress, shopContact, shopFacebook)}
-            className="flex-1 bg-[#C53030] hover:bg-[#991B1B] text-white text-base py-3 px-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-sm hover:shadow-md active:scale-[0.98]">
+            className="flex-1 bg-[#778873] hover:bg-[#5A6B56] text-white text-base py-3 px-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-sm hover:shadow-md active:scale-[0.98]">
             <Printer size={18} /> Print
           </button>
         </div>
@@ -219,3 +219,5 @@ export function ReceiptDialog({ jobbing, shopName, shopAddress, shopContact, sho
     </div>
   );
 }
+
+

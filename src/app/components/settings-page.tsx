@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle } from "lucide-react";
 import { getSettings, saveSettings, type ShopSettings } from "@/lib/supabase-service";
 
@@ -42,20 +42,20 @@ export function SettingsPage({ role }: { role: "admin" | "superadmin" }) {
           <Section title="Shop Information">
             <Field label="Shop Name">
               <input value={settings.shopName} onChange={(e) => set("shopName", e.target.value)}
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
             </Field>
             <Field label="Address">
               <input value={settings.address} onChange={(e) => set("address", e.target.value)}
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
             </Field>
             <Field label="Contact Number">
               <input value={settings.contactNumber} onChange={(e) => set("contactNumber", e.target.value)}
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
             </Field>
             <Field label="Facebook Page">
               <input value={settings.facebookPage} onChange={(e) => set("facebookPage", e.target.value)}
                 placeholder="facebook.com/yourpage"
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200" />
             </Field>
           </Section>
 
@@ -65,7 +65,7 @@ export function SettingsPage({ role }: { role: "admin" | "superadmin" }) {
                 value={settings.defaultPaymentTerms}
                 onChange={(e) => set("defaultPaymentTerms", e.target.value)}
                 rows={3}
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 resize-none bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200"
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 resize-none bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all duration-200"
               />
             </Field>
           </Section>
@@ -79,7 +79,7 @@ export function SettingsPage({ role }: { role: "admin" | "superadmin" }) {
               <button
                 type="button"
                 onClick={() => set("smsReminders", !settings.smsReminders)}
-                className={`w-11 sm:w-12 h-6 rounded-full transition-all duration-200 relative shrink-0 ${settings.smsReminders ? "bg-[#C53030]" : "bg-gray-300"}`}
+                className={`w-11 sm:w-12 h-6 rounded-full transition-all duration-200 relative shrink-0 ${settings.smsReminders ? "bg-[#778873]" : "bg-gray-300"}`}
               >
                 <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all duration-200 shadow-sm ${settings.smsReminders ? "left-[21px] sm:left-[23px]" : "left-0.5"}`} />
               </button>
@@ -90,7 +90,7 @@ export function SettingsPage({ role }: { role: "admin" | "superadmin" }) {
             <button
               type="submit"
               className={`flex items-center gap-2 text-base py-3 px-5 sm:px-6 rounded-xl transition-all duration-200 font-medium ${
-                saved ? "bg-[#E8F5F1] text-[#0F6E56]" : "bg-[#C53030] hover:bg-[#991B1B] text-white shadow-sm hover:shadow-md active:scale-[0.98]"
+                saved ? "bg-[#E8F5F1] text-[#0F6E56]" : "bg-[#778873] hover:bg-[#5A6B56] text-white shadow-sm hover:shadow-md active:scale-[0.98]"
               }`}
             >
               {saved && <CheckCircle size={16} />}
@@ -122,3 +122,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </div>
   );
 }
+
+
+

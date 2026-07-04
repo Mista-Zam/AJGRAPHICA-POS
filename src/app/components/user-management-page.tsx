@@ -127,7 +127,7 @@ export function UserManagementPage() {
 
         <Section title="Users">
           {error && (
-            <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#991B1B] text-sm px-4 py-3 rounded-xl">
+            <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#DC2626] text-sm px-4 py-3 rounded-xl">
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
               {error}
             </div>
@@ -140,8 +140,8 @@ export function UserManagementPage() {
               {profiles.map((p) => (
                 <div key={p.id} className="flex items-center justify-between py-2.5 gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-[#C53030]/10 flex items-center justify-center shrink-0">
-                      <User size={14} className="text-[#C53030]" />
+                    <div className="w-8 h-8 rounded-full bg-[#778873]/10 flex items-center justify-center shrink-0">
+                      <User size={14} className="text-[#778873]" />
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{p.name || p.full_name || "Unnamed"}</div>
@@ -156,12 +156,12 @@ export function UserManagementPage() {
                           value={changePassword}
                           onChange={(e) => setChangePassword(e.target.value)}
                           placeholder="New password"
-                          className="w-28 sm:w-36 border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200"
+                          className="w-28 sm:w-36 border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#778873] bg-white dark:bg-[#1a1a1a] dark:text-gray-200"
                         />
                         <button
                           onClick={() => handleChangePassword(p.user_id)}
                           disabled={changing || !changePassword.trim()}
-                          className="text-xs bg-[#C53030] hover:bg-[#991B1B] text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
+                          className="text-xs bg-[#778873] hover:bg-[#5A6B56] text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
                         >
                           {changing ? "..." : "Save"}
                         </button>
@@ -175,7 +175,7 @@ export function UserManagementPage() {
                     ) : (
                       <button
                         onClick={() => { setChangeUserId(p.id); setChangePassword(""); setChangeSuccess(false); }}
-                        className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#C53030] px-2 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#778873] px-2 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <Key size={12} />
                         Change Password
@@ -194,7 +194,7 @@ export function UserManagementPage() {
           )}
 
           {changeError && (
-            <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#991B1B] text-sm px-4 py-3 rounded-xl">
+            <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#DC2626] text-sm px-4 py-3 rounded-xl">
               <AlertCircle size={16} className="shrink-0 mt-0.5" /> {changeError}
             </div>
           )}
@@ -203,7 +203,7 @@ export function UserManagementPage() {
         <div className="mt-3 sm:mt-4">
           <Section title="Create New User">
             {createError && (
-              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#991B1B] text-sm px-4 py-3 rounded-xl mb-3">
+              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#5A6B56] text-sm px-4 py-3 rounded-xl mb-3">
                 <AlertCircle size={16} className="shrink-0 mt-0.5" /> {createError}
               </div>
             )}
@@ -211,19 +211,19 @@ export function UserManagementPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Username">
                   <input value={newUsername} onChange={(e) => setNewUsername(e.target.value)} placeholder="e.g. juan"
-                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
+                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
                 </Field>
                 <Field label="Name">
                   <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full name"
-                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
+                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
                 </Field>
                 <Field label="Password">
                   <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 6 characters"
-                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
+                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] bg-white dark:bg-[#1a1a1a] dark:text-gray-200" />
                 </Field>
                 <Field label="Role">
                   <select value={newRole} onChange={(e) => setNewRole(e.target.value as "admin" | "superadmin")}
-                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] bg-white dark:bg-[#1a1a1a] dark:text-gray-200">
+                    className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#778873] bg-white dark:bg-[#1a1a1a] dark:text-gray-200">
                     <option value="admin">Admin</option>
                     <option value="superadmin">Superadmin</option>
                   </select>
@@ -232,7 +232,7 @@ export function UserManagementPage() {
               <button
                 type="submit"
                 disabled={creating}
-                className="self-start flex items-center gap-2 bg-[#C53030] hover:bg-[#991B1B] text-white text-xs font-medium px-4 py-2 rounded-xl transition-all disabled:opacity-50"
+                className="self-start flex items-center gap-2 bg-[#778873] hover:bg-[#5A6B56] text-white text-xs font-medium px-4 py-2 rounded-xl transition-all disabled:opacity-50"
               >
                 {creating ? "Creating..." : <><Plus size={14} /> Create User</>}
               </button>
@@ -243,3 +243,6 @@ export function UserManagementPage() {
     </div>
   );
 }
+
+
+

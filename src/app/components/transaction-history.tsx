@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Download, ChevronDown, Eye, RotateCcw, Trash2, Search } from "lucide-react";
 import type { FinanceRecord } from "@/lib/supabase-service";
 import { formatPeso, formatDate, PAYMENT_COLORS, JOB_TYPES } from "../data/utils";
@@ -55,7 +55,7 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
             <p className="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5">{completed.length} completed job{completed.length !== 1 ? "s" : ""}</p>
           </div>
           <button onClick={handleExport}
-            className="flex items-center gap-2 border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] text-gray-600 dark:text-gray-400 hover:bg-[#FEF2F2] dark:hover:bg-[#2a2a2a] hover:text-[#C53030] dark:hover:text-[#f87171] text-sm py-2.5 px-4 sm:px-5 rounded-xl transition-colors shrink-0 font-medium card-shadow">
+            className="flex items-center gap-2 border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] text-gray-600 dark:text-gray-400 hover:bg-[#FDF6ED] dark:hover:bg-[#2a2a2a] hover:text-[#778873] dark:hover:text-[#A1BC98] text-sm py-2.5 px-4 sm:px-5 rounded-xl transition-colors shrink-0 font-medium card-shadow">
             <Download size={16} /> Export CSV
           </button>
         </div>
@@ -68,33 +68,33 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search customer or ID..."
-              className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg pl-7 pr-2 py-1.5 text-[11px] sm:text-xs md:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 dark:placeholder-gray-500"
+              className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg pl-7 pr-2 py-1.5 text-[9px] sm:text-xs md:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 dark:placeholder-gray-500"
             />
           </div>
           <div className="relative">
             <select value={filterType} onChange={(e) => setFilterType(e.target.value)}
-              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 pr-5 sm:pr-6 focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20">
+              className="appearance-none bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 pr-5 sm:pr-6 focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20">
               <option value="All">All Types</option>
               {JOB_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
             <ChevronDown size={14} className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none" />
           </div>
           <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}
-            className="border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-1.5 sm:px-2 py-1.5 text-[11px] sm:text-xs md:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-300 max-w-[130px] sm:max-w-[150px]" />
+            className="border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-1.5 sm:px-2 py-1.5 text-[9px] sm:text-xs md:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-300 max-w-[130px] sm:max-w-[150px]" />
           <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)}
-            className="border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-1.5 sm:px-2 py-1.5 text-[11px] sm:text-xs md:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-300 max-w-[130px] sm:max-w-[150px]" />
+            className="border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-lg px-1.5 sm:px-2 py-1.5 text-[9px] sm:text-xs md:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-300 max-w-[130px] sm:max-w-[150px]" />
           {(filterType !== "All" || dateFrom || dateTo || searchQuery) && (
             <button onClick={() => { setFilterType("All"); setDateFrom(""); setDateTo(""); setSearchQuery(""); }}
-              className="text-sm text-[#C53030] hover:underline whitespace-nowrap font-medium">Clear</button>
+              className="text-sm text-[#778873] hover:underline whitespace-nowrap font-medium">Clear</button>
           )}
         </div>
 
         {/* Summary cards */}
         <div className="grid grid-cols-1 gap-2 sm:gap-3 mb-3 sm:mb-4">
           <div className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-3 card-shadow relative overflow-hidden">
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C53030] rounded-l-xl" />
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#778873] rounded-l-xl" />
             <div className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mb-0.5 sm:mb-1 leading-tight">Jobs Completed</div>
-            <div className="text-sm sm:text-lg md:text-xl font-bold text-[#C53030] dark:text-[#f87171]">{completed.length}</div>
+            <div className="text-sm sm:text-lg md:text-xl font-bold text-[#778873] dark:text-[#A1BC98]">{completed.length}</div>
           </div>
         </div>
 
@@ -108,12 +108,12 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div className="min-w-0 flex-1">
                   <div className="font-semibold text-sm text-gray-800 dark:text-gray-200 truncate">{j.customerName}</div>
-                  <div className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5 truncate">{j.id} Â· {j.jobType}</div>
+                  <div className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5 truncate">{j.id} · {j.jobType}</div>
                 </div>
                 <span className={`text-[9px] px-1.5 py-0.5 rounded-full shrink-0 ${PAYMENT_COLORS[j.paymentStatus]}`}>{j.paymentStatus}</span>
               </div>
-              <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-1 mb-1.5">{j.description}</p>
-              <div className="flex items-center justify-between text-[11px] mb-1.5">
+              <p className="text-[9px] text-gray-500 dark:text-gray-400 line-clamp-1 mb-1.5">{j.description}</p>
+              <div className="flex items-center justify-between text-[9px] mb-1.5">
                 <span className="text-gray-500 dark:text-gray-400 truncate">Pickup: {formatDate(j.pickupDate)}</span>
                 <span className="font-semibold text-gray-800 dark:text-gray-200 shrink-0">{formatPeso(j.amount)}</span>
               </div>
@@ -126,13 +126,13 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
                 )}
                 {onReopenJob && (
                   <button onClick={() => setReopenId(j.id)}
-                    className="flex-1 text-sm py-3 rounded-lg border border-[#FECACA] dark:border-[#5a1a1a] text-[#991B1B] dark:text-[#f87171] hover:bg-[#FEF2F2] dark:hover:bg-[#2a0a0a] flex items-center justify-center gap-1.5 transition-colors font-medium">
+                    className="flex-1 text-sm py-3 rounded-lg border border-[#DCCFC0] dark:border-[#5a1a1a] text-[#5A6B56] dark:text-[#A1BC98] hover:bg-[#FDF6ED] dark:hover:bg-[#2a0a0a] flex items-center justify-center gap-1.5 transition-colors font-medium">
                     <RotateCcw size={15} /> Reopen
                   </button>
                 )}
                 {onDeleteJobbing && (
                   <button onClick={() => setDeleteId(j.id)}
-                    className="flex-1 text-sm py-3 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-gray-500 dark:text-gray-400 hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] hover:text-[#991B1B] dark:hover:text-[#f87171] flex items-center justify-center gap-1.5 transition-colors font-medium">
+                    className="flex-1 text-sm py-3 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-gray-500 dark:text-gray-400 hover:bg-[#FDF6ED] dark:hover:bg-[#3a1010] hover:text-[#5A6B56] dark:hover:text-[#A1BC98] flex items-center justify-center gap-1.5 transition-colors font-medium">
                     <Trash2 size={15} /> Delete
                   </button>
                 )}
@@ -162,11 +162,11 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
                       ? "bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
                       : "bg-gray-50/50 dark:bg-[#1a1a1a]/50 hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
                   }`}>
-                    <td className="px-2 sm:px-3 md:px-4 py-3 text-[11px] sm:text-xs font-mono text-gray-400 dark:text-gray-500 whitespace-nowrap">{j.id}</td>
+                    <td className="px-2 sm:px-3 md:px-4 py-3 text-[9px] sm:text-xs font-mono text-gray-400 dark:text-gray-500 whitespace-nowrap">{j.id}</td>
                     <td className="px-2 sm:px-3 md:px-4 py-3 font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap text-xs sm:text-sm">{j.customerName}</td>
                     <td className="px-2 sm:px-3 md:px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs sm:text-sm">{j.jobType}</td>
-                    <td className="px-2 sm:px-3 md:px-4 py-3 max-w-[120px] sm:max-w-[200px]"><span className="block truncate text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">{j.description}</span></td>
-                    <td className="px-2 sm:px-3 md:px-4 py-3 text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">{formatDate(j.pickupDate)}</td>
+                    <td className="px-2 sm:px-3 md:px-4 py-3 max-w-[120px] sm:max-w-[200px]"><span className="block truncate text-[9px] sm:text-xs text-gray-500 dark:text-gray-400">{j.description}</span></td>
+                    <td className="px-2 sm:px-3 md:px-4 py-3 text-[9px] sm:text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">{formatDate(j.pickupDate)}</td>
                     <td className="px-2 sm:px-3 md:px-4 py-3 text-gray-700 dark:text-gray-300 whitespace-nowrap font-medium text-xs sm:text-sm">{formatPeso(j.amount)}</td>
                     <td className="px-2 sm:px-3 md:px-4 py-3">
                       <span className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap ${PAYMENT_COLORS[j.paymentStatus]}`}>{j.paymentStatus}</span>
@@ -175,19 +175,19 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
                       <div className="flex items-center gap-1">
                         {onViewJobbing && (
                           <button onClick={() => onViewJobbing(j.id)} title="View Details"
-                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#C53030] dark:hover:text-[#f87171] transition-colors">
+                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FDF6ED] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#778873] dark:hover:text-[#A1BC98] transition-colors">
                             <Eye size={17} />
                           </button>
                         )}
                         {onReopenJob && (
                           <button onClick={() => setReopenId(j.id)} title="Reopen Job"
-                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEF2F2] dark:hover:bg-[#2a0a0a] text-gray-400 dark:text-gray-500 hover:text-[#991B1B] dark:hover:text-[#f87171] transition-colors">
+                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FDF6ED] dark:hover:bg-[#2a0a0a] text-gray-400 dark:text-gray-500 hover:text-[#5A6B56] dark:hover:text-[#A1BC98] transition-colors">
                             <RotateCcw size={17} />
                           </button>
                         )}
                         {onDeleteJobbing && (
                           <button onClick={() => setDeleteId(j.id)} title="Delete Job"
-                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FEF2F2] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#991B1B] dark:hover:text-[#f87171] transition-colors">
+                            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#FDF6ED] dark:hover:bg-[#3a1010] text-gray-400 dark:text-gray-500 hover:text-[#5A6B56] dark:hover:text-[#A1BC98] transition-colors">
                             <Trash2 size={17} />
                           </button>
                         )}
@@ -214,7 +214,7 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
                 Cancel
               </button>
               <button onClick={() => { onReopenJob?.(reopenId); setReopenId(null); }}
-                className="flex-1 bg-[#991B1B] hover:bg-[#991B1B] text-white text-base py-3 rounded-lg transition-colors font-medium">
+                className="flex-1 bg-[#5A6B56] hover:bg-[#5A6B56] text-white text-base py-3 rounded-lg transition-colors font-medium">
                 Reopen
               </button>
             </div>
@@ -235,7 +235,7 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
                 Cancel
               </button>
               <button onClick={() => { onDeleteJobbing?.(deleteId); setDeleteId(null); }}
-                className="flex-1 bg-[#991B1B] hover:bg-[#991B1B] text-white text-base py-3 rounded-lg transition-colors font-medium">
+                className="flex-1 bg-[#5A6B56] hover:bg-[#5A6B56] text-white text-base py-3 rounded-lg transition-colors font-medium">
                 Delete
               </button>
             </div>
@@ -245,3 +245,6 @@ export function TransactionHistory({ finances, onViewJobbing, onReopenJob, onDel
     </div>
   );
 }
+
+
+

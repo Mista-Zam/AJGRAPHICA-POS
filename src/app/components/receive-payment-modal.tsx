@@ -52,12 +52,14 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
       const newTotalPaid = totalPaid + amt;
       const fullyPaid = newTotalPaid >= jobbing.amount;
       const newPoStatus = fullyPaid ? "paid" : "partially_paid";
+      const newDownPayment = jobbing.downPayment + amt;
       const newPaymentStatus = fullyPaid ? "Paid" : newTotalPaid > jobbing.downPayment ? "Partial" : jobbing.paymentStatus;
 
       const updated: Jobbing = {
         ...jobbing,
         poStatus: newPoStatus,
         paymentStatus: newPaymentStatus,
+        downPayment: newDownPayment,
         paymentCompletedAt: fullyPaid ? paymentDate : undefined,
       };
 
@@ -128,7 +130,7 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
               <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">Total Paid</span>
               <span className="text-xs sm:text-sm font-medium text-[#0F6E56]">₱{totalPaid.toLocaleString("en-PH")}</span>
             </div>
-            <div className={`flex items-center justify-between ${remaining > 0 ? "text-[#991B1B]" : "text-[#0F6E56]"}`}>
+            <div className={`flex items-center justify-between ${remaining > 0 ? "text-[#DC2626]" : "text-[#0F6E56]"}`}>
               <span className="text-[10px] sm:text-xs font-medium">Remaining Balance</span>
               <span className="text-xs sm:text-sm font-bold">₱{remaining.toLocaleString("en-PH")}</span>
             </div>
@@ -170,13 +172,13 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Payment Amount *</label>
               <input type="text" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
                 placeholder="0.00"
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
             </div>
 
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Payment Method</label>
               <select value={method} onChange={(e) => setMethod(e.target.value)}
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all">
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all">
                 {PAYMENT_METHODS.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
@@ -184,28 +186,28 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Payment Date</label>
               <input type="date" value={paymentDate} onChange={(e) => setPaymentDate(e.target.value)}
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
             </div>
 
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Reference Number</label>
               <input value={referenceNumber} onChange={(e) => setReferenceNumber(e.target.value)}
                 placeholder="Optional"
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
             </div>
 
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Received By</label>
               <input value={receivedBy} onChange={(e) => setReceivedBy(e.target.value)}
                 placeholder="Optional"
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 transition-all" />
             </div>
 
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Notes</label>
               <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
                 rows={2} placeholder="Optional notes about this payment"
-                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 resize-none transition-all" />
+                className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 bg-white dark:bg-[#1a1a1a] dark:text-gray-200 resize-none transition-all" />
             </div>
 
             {parseFloat(amount) > 0 && remaining > 0 && (
@@ -227,7 +229,7 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
           <button
             onClick={handleSubmit}
             disabled={submitting || !amount || parseFloat(amount) <= 0}
-            className="flex-1 bg-[#C53030] hover:bg-[#991B1B] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base py-3 px-5 rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md active:scale-[0.98]"
+            className="flex-1 bg-[#778873] hover:bg-[#5A6B56] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base py-3 px-5 rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md active:scale-[0.98]"
           >
             {submitting ? "Processing..." : `Receive ₱${parseFloat(amount || "0").toLocaleString("en-PH")}`}
           </button>
@@ -236,3 +238,6 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
     </div>
   );
 }
+
+
+

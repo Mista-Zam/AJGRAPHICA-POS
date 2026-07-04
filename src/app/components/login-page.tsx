@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, AlertCircle, Shield, User, Lock, Mail } from "lucide-react";
 import { login } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -51,7 +51,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   return (
     <div className="min-h-screen bg-white flex overflow-hidden">
       {/* Left brand panel */}
-      <div className="hidden lg:flex w-[min(38vw,520px)] shrink-0 flex-col relative bg-[#C53030] overflow-hidden">
+      <div className="hidden lg:flex w-[min(38vw,520px)] shrink-0 flex-col relative bg-[#778873] overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-white/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
@@ -76,7 +76,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               Shop Management<br />System
             </h1>
             <p className="text-white/60 text-sm leading-relaxed max-w-xs">
-              Track jobbings, manage deadlines, and keep your print shop running smoothly — all in one place.
+              Track jobbings, manage deadlines, and keep your print shop running smoothly � all in one place.
             </p>
           </div>
 
@@ -101,11 +101,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         <div className="w-full max-w-sm animate-fade-in">
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-2.5 mb-8">
-            <div className="w-9 h-9 rounded-xl bg-[#C53030] flex items-center justify-center overflow-hidden shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-[#778873] flex items-center justify-center overflow-hidden shadow-sm">
               <img src="/logo.jpg" alt="AJ Graphica" className="w-full h-full object-cover" />
             </div>
             <div>
-              <div className="text-[#C53030] font-bold uppercase tracking-wide text-sm">AJ Graphica</div>
+              <div className="text-[#778873] font-bold uppercase tracking-wide text-sm">AJ Graphica</div>
               <div className="text-gray-400 text-xs">Print & Tailoring</div>
             </div>
           </div>
@@ -117,7 +117,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {error && (
-              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#991B1B] text-sm px-4 py-3 rounded-xl animate-slide-in-up">
+              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 text-[#DC2626] text-sm px-4 py-3 rounded-xl animate-slide-in-up">
                 <AlertCircle size={16} className="shrink-0 mt-0.5" />
                 {error}
               </div>
@@ -133,7 +133,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
-                  className="w-full border border-gray-200 rounded-xl pl-10 pr-3.5 py-3 text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/15 bg-white text-gray-900 transition-all duration-200 placeholder:text-gray-400"
+                  className="w-full border border-gray-200 rounded-xl pl-10 pr-3.5 py-3 text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/15 bg-white text-gray-900 transition-all duration-200 placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -147,7 +147,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full border border-gray-200 rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/15 bg-white text-gray-900 transition-all duration-200 placeholder:text-gray-400"
+                  className="w-full border border-gray-200 rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/15 bg-white text-gray-900 transition-all duration-200 placeholder:text-gray-400"
                 />
                 <button
                   type="button"
@@ -162,7 +162,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#C53030] hover:bg-[#991B1B] text-white text-sm font-bold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2.5 mt-1 shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
+              className="w-full bg-[#778873] hover:bg-[#5A6B56] text-white text-sm font-bold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2.5 mt-1 shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -188,3 +188,6 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     </div>
   );
 }
+
+
+

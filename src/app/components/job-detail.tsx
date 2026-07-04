@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { ArrowLeft, AlertTriangle, CheckCircle, Edit3, Printer, Save, CreditCard } from "lucide-react";
 import type { Jobbing, JobStage, PaymentStatus } from "../data/mock-data";
 import { formatPeso, formatDateLong, getPickupColor, PAYMENT_COLORS } from "../data/utils";
@@ -19,7 +19,7 @@ function getPickupColorDetail(isoDate: string) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const d = new Date(isoDate); d.setHours(0, 0, 0, 0);
   const diff = Math.round((d.getTime() - today.getTime()) / 86400000);
-  if (diff < 0) return "text-[#991B1B] dark:text-[#e87070] font-bold";
+  if (diff < 0) return "text-[#DC2626] dark:text-[#e87070] font-bold";
   if (diff === 0) return "text-[#0F6E56] dark:text-[#5abb9e] font-semibold";
   return "text-gray-800 dark:text-gray-300";
 }
@@ -50,25 +50,25 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
     <div className="flex-1 overflow-y-auto animate-fade-in">
       <div className="p-3 sm:p-4 md:p-6 max-w-3xl mx-auto">
         {/* Back */}
-        <button onClick={onBack} className="flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 hover:text-[#C53030] dark:hover:text-[#f87171] mb-4 transition-all duration-200 py-2 hover:-translate-x-0.5">
+        <button onClick={onBack} className="flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 hover:text-[#778873] dark:hover:text-[#A1BC98] mb-4 transition-all duration-200 py-2 hover:-translate-x-0.5">
           <ArrowLeft size={18} /> {backLabel}
         </button>
 
         {/* Header card */}
-        <div className={`card-shadow rounded-xl border p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 ${isUrgentActive ? "bg-[#FEF2F2] dark:bg-[#3a1010] border-[#FECACA] dark:border-[#6a2020]" : "bg-white dark:bg-[#1a1a1a] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]"}`}>
+        <div className={`card-shadow rounded-xl border p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 ${isUrgentActive ? "bg-[#FEE2E2] dark:bg-[#3a1010] border-[#FECACA] dark:border-[#6a2020]" : "bg-white dark:bg-[#1a1a1a] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]"}`}>
           <div className="flex items-start justify-between gap-2 sm:gap-3">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
-                {isUrgentActive && <AlertTriangle size={16} className="text-[#991B1B] shrink-0" />}
+                {isUrgentActive && <AlertTriangle size={16} className="text-[#DC2626] shrink-0" />}
                 <span className="text-[10px] sm:text-xs font-mono text-gray-400">{jobbing.id}</span>
-                {jobbing.isPurchaseOrder && (
+                {jobbing.isPurchaseOrder && jobbing.poStatus !== "paid" && (
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-700/30">
                     <CreditCard size={10} />
                     Purchase Order
                   </span>
                 )}
               </div>
-              <h2 className={`truncate text-lg sm:text-xl ${isUrgentActive ? "text-[#991B1B] dark:text-[#e87070]" : "text-gray-900 dark:text-gray-100"}`}>{jobbing.customerName}</h2>
+              <h2 className={`truncate text-lg sm:text-xl ${isUrgentActive ? "text-[#DC2626] dark:text-[#e87070]" : "text-gray-900 dark:text-gray-100"}`}>{jobbing.customerName}</h2>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5">{jobbing.contactNumber}</p>
               {jobbing.address && <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-0.5">{jobbing.address}</p>}
             </div>
@@ -76,7 +76,7 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
               <span className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full ${PAYMENT_COLORS[jobbing.paymentStatus]}`}>{jobbing.paymentStatus}</span>
               <div className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200 mt-1">{formatPeso(jobbing.amount)}</div>
               {balance > 0 && (
-                <div className="text-[10px] sm:text-xs text-[#991B1B] dark:text-[#e87070] font-medium">Bal: {formatPeso(balance)}</div>
+                <div className="text-[10px] sm:text-xs text-[#DC2626] dark:text-[#e87070] font-medium">Bal: {formatPeso(balance)}</div>
               )}
             </div>
           </div>
@@ -98,7 +98,7 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
           )}
         </div>
 
-        {/* Info + Payment â€” stacked on mobile, side-by-side on md+ */}
+        {/* Info + Payment — stacked on mobile, side-by-side on md+ */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
           {/* Job Info */}
           <div className="card-shadow bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl p-3 sm:p-4">
@@ -115,9 +115,9 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
                 <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">Pickup Date</span>
                 <p className={`text-xs sm:text-sm mt-0.5 ${getPickupColorDetail(jobbing.pickupDate)}`}>{formatDateLong(jobbing.pickupDate)}</p>
               </div>
-              {jobbing.isPurchaseOrder && (
+              {jobbing.isPurchaseOrder && jobbing.poStatus !== "paid" && (
                 <>
-                  <Row label="PO Status" value={jobbing.poStatus === "paid" ? "Paid" : jobbing.poStatus === "partially_paid" ? "Partially Paid" : jobbing.poStatus === "pending_payment" ? "Pending Payment" : jobbing.poStatus || "None"} />
+                  <Row label="PO Status" value={jobbing.poStatus === "partially_paid" ? "Partially Paid" : jobbing.poStatus === "pending_payment" ? "Pending Payment" : jobbing.poStatus || "None"} />
                   {jobbing.dueDate && <Row label="Due Date" value={formatDateLong(jobbing.dueDate)} />}
                   {jobbing.poNotes && (
                     <div>
@@ -160,7 +160,7 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
                     jobbing.paymentStatus === p
                       ? p === "Paid" ? "bg-[#0F6E56] text-white border-[#0F6E56] shadow-sm"
                         : p === "Partial" ? "bg-amber-500 text-white border-amber-500 shadow-sm"
-                        : "bg-[#991B1B] text-white border-[#991B1B] shadow-sm"
+                        : "bg-[#DC2626] text-white border-[#DC2626] shadow-sm"
                       : "bg-white dark:bg-[#1a1a1a] text-gray-500 dark:text-gray-400 border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] hover:bg-gray-50 dark:hover:bg-[#2a2a2a]"
                   }`}
                 >
@@ -180,17 +180,17 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
                 <button onClick={() => handleStage(stage)} className="flex flex-col items-center gap-1 sm:gap-1.5 group flex-shrink-0 px-0.5 sm:px-0">
                   <div className={`w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
                     i <= stageIdx
-                      ? "bg-[#C53030] border-[#C53030] text-white shadow-md"
-                      : "bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 group-hover:border-[#C53030] dark:group-hover:border-[#f87171] group-hover:scale-110"
+                      ? "bg-[#778873] border-[#778873] text-white shadow-md"
+                      : "bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 group-hover:border-[#778873] dark:group-hover:border-[#A1BC98] group-hover:scale-110"
                   }`}>
                     {i < stageIdx ? <CheckCircle size={16} /> : <span className="text-sm font-semibold">{i + 1}</span>}
                   </div>
-                  <span className={`text-[10px] sm:text-xs text-center leading-tight max-w-[48px] sm:max-w-[64px] ${i <= stageIdx ? "text-[#C53030] dark:text-[#f87171] font-semibold" : "text-gray-400 dark:text-gray-500"}`}>
+                  <span className={`text-[10px] sm:text-xs text-center leading-tight max-w-[48px] sm:max-w-[64px] ${i <= stageIdx ? "text-[#778873] dark:text-[#A1BC98] font-semibold" : "text-gray-400 dark:text-gray-500"}`}>
                     {stage}
                   </span>
                 </button>
                 {i < STAGES.length - 1 && (
-                  <div className={`flex-1 h-0.5 mx-0.5 sm:mx-1 mb-3 sm:mb-4 rounded-full ${i < stageIdx ? "bg-[#C53030]" : "bg-gray-200 dark:bg-gray-700"}`} />
+                  <div className={`flex-1 h-0.5 mx-0.5 sm:mx-1 mb-3 sm:mb-4 rounded-full ${i < stageIdx ? "bg-[#778873]" : "bg-gray-200 dark:bg-gray-700"}`} />
                 )}
               </div>
             ))}
@@ -205,9 +205,9 @@ export function JobDetail({ jobbing, onBack, onUpdate, onSaved, onEdit, onPrintR
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Add notes for this job..."
-            className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#C53030] focus:ring-2 focus:ring-[#C53030]/20 resize-none bg-white dark:bg-[#1a1a1a] dark:text-gray-200 dark:placeholder-gray-500 transition-all duration-200"
+            className="w-full border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#778873] focus:ring-2 focus:ring-[#778873]/20 resize-none bg-white dark:bg-[#1a1a1a] dark:text-gray-200 dark:placeholder-gray-500 transition-all duration-200"
           />
-          <button onClick={handleSaveNotes} className="mt-3 flex items-center gap-2 text-base py-3 px-5 rounded-xl transition-all duration-200 bg-[#C53030] hover:bg-[#991B1B] text-white font-medium shadow-sm hover:shadow-md active:scale-[0.98]">
+          <button onClick={handleSaveNotes} className="mt-3 flex items-center gap-2 text-base py-3 px-5 rounded-xl transition-all duration-200 bg-[#778873] hover:bg-[#DC2626] text-white font-medium shadow-sm hover:shadow-md active:scale-[0.98]">
             <Save size={18} />
             Save Notes
           </button>
@@ -221,7 +221,11 @@ function Row({ label, value, highlight = false }: { label: string; value: string
   return (
     <div className="flex items-center justify-between gap-2">
       <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0">{label}</span>
-      <span className={`text-sm text-right ${highlight ? "font-semibold text-[#991B1B] dark:text-[#e87070]" : "text-gray-700 dark:text-gray-300"}`}>{value}</span>
+      <span className={`text-sm text-right ${highlight ? "font-semibold text-[#DC2626] dark:text-[#e87070]" : "text-gray-700 dark:text-gray-300"}`}>{value}</span>
     </div>
   );
 }
+
+
+
+

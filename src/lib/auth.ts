@@ -30,3 +30,5 @@ export async function restoreSession() {
 }
 
 export const ADMIN_FUNCTION_URL = "https://pxaklzjiuncwgbzuqvis.supabase.co/functions/v1/server/admin"
+
+

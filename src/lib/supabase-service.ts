@@ -365,3 +365,5 @@ export async function clearAllData(): Promise<void> {
   await supabase.from("finance_records").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   await supabase.from("settings").delete().eq("key", "shop");
 }
+
+

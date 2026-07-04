@@ -104,3 +104,5 @@ export const health = withSupabase(
   { auth: "none" },
   async () => Response.json({ status: "ok" }),
 )
+
+
