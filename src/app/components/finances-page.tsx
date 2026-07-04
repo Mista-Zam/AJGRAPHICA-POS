@@ -80,10 +80,11 @@ export function FinancesPage({ finances, jobbings, onViewJobbing }: FinancesPage
     if (period === "monthly") {
       const monthMap = new Map<string, { revenue: number; jobs: number; label: string }>();
       const years = [...new Set(done.map((j) => new Date(j.completedAt).getFullYear()))].sort();
-      const year = years.length > 0 ? years[years.length - 1] : new Date().getFullYear();
-      for (let m = 0; m < 12; m++) {
-        const key = `${year}-${String(m + 1).padStart(2, "0")}`;
-        monthMap.set(key, { revenue: 0, jobs: 0, label: MONTHS[m] });
+      for (const year of years) {
+        for (let m = 0; m < 12; m++) {
+          const key = `${year}-${String(m + 1).padStart(2, "0")}`;
+          monthMap.set(key, { revenue: 0, jobs: 0, label: `${MONTHS[m]} ${year}` });
+        }
       }
       for (const j of done) {
         const d = new Date(j.completedAt);

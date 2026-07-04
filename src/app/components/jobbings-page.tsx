@@ -129,22 +129,22 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
 
         {/* Bulk action bar */}
         {isSuperadmin && selectedIds.size > 0 && (
-          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 p-2.5 sm:p-3 bg-[#1a1a1a] dark:bg-[#2a2a2a] border border-[rgba(255,255,255,0.12)] rounded-xl card-shadow">
-            <button onClick={clearSelection} className="text-gray-400 hover:text-white transition-colors p-1">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 p-2.5 sm:p-3 bg-[#FDF6ED] dark:bg-[#2a2a2a] border border-[#DCCFC0] dark:border-[rgba(255,255,255,0.12)] rounded-xl card-shadow">
+            <button onClick={clearSelection} className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors p-1">
               <X size={16} />
             </button>
-            <span className="text-xs sm:text-sm text-white font-medium">{selectedIds.size} selected</span>
-            <div className="h-4 w-px bg-[rgba(255,255,255,0.15)]" />
+            <span className="text-xs sm:text-sm text-gray-800 dark:text-white font-medium">{selectedIds.size} selected</span>
+            <div className="h-4 w-px bg-[rgba(0,0,0,0.12)] dark:bg-[rgba(255,255,255,0.15)]" />
             <select
               value={bulkStage}
               onChange={(e) => setBulkStage(e.target.value as JobStage)}
-              className="appearance-none bg-white/10 border border-[rgba(255,255,255,0.2)] rounded-lg px-2 py-1.5 text-xs text-white pr-5 focus:outline-none focus:ring-2 focus:ring-[#778873]/20 cursor-pointer"
+              className="appearance-none bg-white dark:bg-white/10 border border-[rgba(0,0,0,0.15)] dark:border-[rgba(255,255,255,0.2)] rounded-lg px-2 py-1.5 text-xs text-gray-800 dark:text-white pr-5 focus:outline-none focus:ring-2 focus:ring-[#778873]/20 cursor-pointer"
             >
-              {BULK_STAGES.map((s) => <option key={s} value={s} style={{ color: "#111", background: "#fff" }}>{s}</option>)}
+              {BULK_STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
             <button
               onClick={handleApplyBulk}
-              className="bg-[#DC2626] hover:bg-[#DC2626] text-white text-xs sm:text-sm py-1.5 px-3 sm:px-4 rounded-lg transition-colors font-medium shrink-0"
+              className="bg-[#778873] hover:bg-[#5A6B56] text-white text-xs sm:text-sm py-1.5 px-3 sm:px-4 rounded-lg transition-colors font-medium shrink-0"
             >
               Apply
             </button>
@@ -205,7 +205,13 @@ export function JobbingsPage({ jobbings, onViewJobbing, onMarkDone, onNewJobbing
                   <div className="text-right shrink-0">
                     <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">{formatPeso(j.amount)}</div>
                     <div className={`text-[9px] font-medium ${balance > 0 ? "text-[#DC2626]" : "text-[#0F6E56]"}`}>
-                      {balance > 0 ? `Bal: ${formatPeso(balance)}` : "Fully Paid"}
+                      {j.isPurchaseOrder && j.poStatus !== "paid"
+                        ? j.poStatus === "partially_paid"
+                          ? "Partially Paid"
+                          : "PO Pending"
+                        : balance > 0
+                        ? `Bal: ${formatPeso(balance)}`
+                        : "Fully Paid"}
                     </div>
                   </div>
                 </div>

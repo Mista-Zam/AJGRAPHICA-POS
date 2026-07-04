@@ -29,6 +29,7 @@ export async function restoreSession() {
   return profile ? { session, profile } : null
 }
 
-export const ADMIN_FUNCTION_URL = "https://pxaklzjiuncwgbzuqvis.supabase.co/functions/v1/server/admin"
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+export const ADMIN_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/server/admin`
 
 

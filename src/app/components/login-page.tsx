@@ -3,7 +3,7 @@ import { Eye, EyeOff, AlertCircle, Shield, User, Lock, Mail } from "lucide-react
 import { login } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 
-const RESOLVE_USERNAME_URL = "https://pxaklzjiuncwgbzuqvis.supabase.co/functions/v1/server/resolve-username";
+const RESOLVE_USERNAME_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/server/resolve-username`;
 
 interface LoginPageProps {
   onLogin: (role: "admin" | "superadmin") => void;

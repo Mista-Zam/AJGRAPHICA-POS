@@ -73,7 +73,7 @@ export function ReceivePaymentModal({ jobbing, onClose, onComplete }: ReceivePay
           description: jobbing.description,
           quantity: jobbing.quantity,
           amount: jobbing.amount,
-          downPayment: jobbing.downPayment,
+          downPayment: newDownPayment,
           paymentStatus: "Paid",
           pickupDate: jobbing.pickupDate,
           completedAt: paymentDate,

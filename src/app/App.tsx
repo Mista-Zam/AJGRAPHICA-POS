@@ -94,41 +94,43 @@ export default function App() {
     }).catch((err) => console.error("Failed to add jobbing:", err));
   };
 
-  const handleMarkDone = (id: string) => {
-    setJobbings((prev) => {
-      const updated = prev.map((j) => j.id === id ? { ...j, status: "Done" as const, stage: "Completed" as const } : j);
-      const job = updated.find((j) => j.id === id);
-      if (job) {
-        updateJobbing(job).catch((err) => console.error("Failed to update jobbing:", err));
-        if (!job.isPurchaseOrder) {
-          const record: FinanceRecord = {
-            id: job.id,
-            customerName: job.customerName,
-            jobType: job.jobType,
-            description: job.description,
-            quantity: job.quantity,
-            amount: job.amount,
-            downPayment: job.downPayment,
-            paymentStatus: job.paymentStatus,
-            pickupDate: job.pickupDate,
-            completedAt: new Date().toISOString().split("T")[0],
-            createdAt: job.createdAt,
-          };
-          saveFinanceRecord(record).then(() => {
-            setFinances((prev) => {
-              const idx = prev.findIndex((f) => f.id === record.id);
-              if (idx >= 0) {
-                const copy = [...prev];
-                copy[idx] = record;
-                return copy;
-              }
-              return [record, ...prev];
-            });
-          }).catch((err) => console.error("Failed to save finance record:", err));
-        }
+  const handleMarkDone = async (id: string) => {
+    const now = new Date().toISOString().split("T")[0];
+    const job = jobbings.find((j) => j.id === id);
+    if (!job) return;
+    const updated = { ...job, status: "Done" as const, stage: "Completed" as const };
+    setJobbings((prev) => prev.map((j) => j.id === id ? updated : j));
+    try {
+      await updateJobbing(updated);
+      if (!job.isPurchaseOrder) {
+        const record: FinanceRecord = {
+          id: job.id,
+          customerName: job.customerName,
+          jobType: job.jobType,
+          description: job.description,
+          quantity: job.quantity,
+          amount: job.amount,
+          downPayment: job.downPayment,
+          paymentStatus: job.paymentStatus,
+          pickupDate: job.pickupDate,
+          completedAt: now,
+          createdAt: job.createdAt,
+        };
+        await saveFinanceRecord(record);
+        setFinances((prev) => {
+          const idx = prev.findIndex((f) => f.id === record.id);
+          if (idx >= 0) {
+            const copy = [...prev];
+            copy[idx] = record;
+            return copy;
+          }
+          return [record, ...prev];
+        });
       }
-      return updated;
-    });
+    } catch (err) {
+      console.error("Failed to mark job as done:", err);
+      setJobbings((prev) => prev.map((j) => j.id === id ? job : j));
+    }
   };
 
   const handleUpdateJobbing = (updated: Jobbing) => {
@@ -222,7 +224,7 @@ export default function App() {
     }).catch((err) => console.error("Failed to bulk update:", err));
   };
 
-  if (!dbReady) {
+  if (!dbReady || !sessionLoaded) {
     return (
       <div className="flex h-dvh items-center justify-center bg-background">
         <div className="text-muted-foreground text-sm font-medium">Loading...</div>
@@ -245,14 +247,7 @@ export default function App() {
     setSidebarOpen(false);
   };
 
-  if (!sessionLoaded || !loggedIn) {
-    if (!sessionLoaded) {
-      return (
-        <div className="flex h-dvh items-center justify-center bg-background">
-          <div className="text-muted-foreground text-sm font-medium">Loading...</div>
-        </div>
-      );
-    }
+  if (!loggedIn) {
     return <LoginPage onLogin={(r) => { setRole(r); setLoggedIn(true); }} />;
   }
 

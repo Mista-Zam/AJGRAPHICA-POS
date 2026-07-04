@@ -108,7 +108,7 @@ export function Dashboard({ jobbings, finances, onViewJobbing }: DashboardProps)
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{j.customerName}</div>
                               <div className="text-[9px] text-gray-400 dark:text-gray-500 truncate">
-                                {j.jobType} � {j.id}
+                                {j.jobType} &middot; {j.id}
                                 {isPO && <span className="ml-1 text-amber-600 font-semibold">[PO]</span>}
                               </div>
                             </div>

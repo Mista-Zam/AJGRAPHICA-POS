@@ -20,7 +20,6 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
   const poJobbings = useMemo(() => {
     return jobbings
       .filter((j) => j.isPurchaseOrder)
-      .filter((j) => j.status === "Done")
       .filter((j) => j.poStatus === "pending_payment" || j.poStatus === "partially_paid");
   }, [jobbings]);
 
@@ -133,8 +132,70 @@ export function PurchaseOrdersPage({ jobbings, onViewJobbing, onReceivePayment, 
         </select>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] overflow-hidden">
+      {/* Mobile: Cards */}
+      <div className="sm:hidden flex flex-col gap-2">
+        {paged.length === 0 && (
+          <div className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl py-12 text-center text-sm text-gray-400 dark:text-gray-500 card-shadow">No purchase orders found.</div>
+        )}
+        {paged.map((j) => {
+          const overdue = isOverdue(j);
+          const balance = remainingBalance(j);
+          const isPartial = j.poStatus === "partially_paid";
+          return (
+            <div key={j.id} onClick={() => onViewJobbing(j.id)} className="bg-white dark:bg-[#1a1a1a] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-xl card-shadow overflow-hidden cursor-pointer">
+              <div className="px-3 pt-2.5 pb-1.5">
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate">{j.customerName}</span>
+                    </div>
+                    <div className="text-[10px] text-gray-400">
+                      <span className="font-mono">{j.id}</span> · {j.jobType}
+                    </div>
+                  </div>
+                  <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-semibold ${
+                    isPartial
+                      ? "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400"
+                      : overdue
+                      ? "bg-red-50 dark:bg-red-900/20 text-[#DC2626] dark:text-red-400"
+                      : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                  }`}>
+                    {isPartial ? "Partial" : overdue ? "Overdue" : "Pending"}
+                  </span>
+                </div>
+              </div>
+              <div className="px-3 pb-1.5 flex items-center justify-between">
+                <div>
+                  <div className="text-[9px] text-gray-400">Due: {(j.dueDate || j.pickupDate)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">₱{j.amount.toLocaleString("en-PH")}</div>
+                  <div className={`text-[9px] font-medium ${balance > 0 ? "text-[#DC2626]" : "text-[#0F6E56]"}`}>Bal: ₱{balance.toLocaleString("en-PH")}</div>
+                </div>
+              </div>
+              <div className="px-2 py-1.5 flex gap-1 border-t border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]">
+                <button onClick={(e) => { e.stopPropagation(); onViewJobbing(j.id); }}
+                  className="flex-1 text-sm py-3 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-[#2a2a2a] flex items-center justify-center gap-1.5 transition-colors font-medium">
+                  <Eye size={15} /> View
+                </button>
+                <button onClick={(e) => { e.stopPropagation(); onReceivePayment(j.id); }}
+                  className="flex-1 text-sm py-3 rounded-lg bg-[#778873] hover:bg-[#DC2626] text-white flex items-center justify-center gap-1.5 transition-colors font-medium">
+                  <CheckCircle2 size={15} /> Pay
+                </button>
+                {onDeleteJobbing && (
+                  <button onClick={(e) => { e.stopPropagation(); if (confirm(`Delete ${j.id}?`)) onDeleteJobbing(j.id); }}
+                    className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-[#FEE2E2] dark:hover:bg-[#5a2020] hover:text-[#DC2626] dark:hover:text-[#A1BC98] transition-colors">
+                    <Trash2 size={15} />
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop: Table */}
+      <div className="hidden sm:block bg-white dark:bg-[#1a1a1a] rounded-xl border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-xs sm:text-sm">
             <thead>
